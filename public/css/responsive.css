@@ -1,0 +1,13 @@
+@media (max-width: 767px) {
+    .offset-xs-1 {
+        margin-left: 8.333336%;
+    }
+
+    .offset-xs-2 {
+        margin-left: 16.666667%;
+    }
+
+    .offset-xs-3 {
+        margin-left: 25%;
+    }
+}
