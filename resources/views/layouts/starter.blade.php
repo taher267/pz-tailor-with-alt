@@ -16,6 +16,7 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="{{$URL.'/assets/alt/dist/css/adminlte.min.css'}}">
   <link rel="stylesheet" href="{{$URL.'/css/responsive.css'}}">
+  <link rel="stylesheet" href="/css/style.css">
   @livewireStyles
 @stack('styles')
 </head>

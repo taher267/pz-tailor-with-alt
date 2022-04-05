@@ -34,5 +34,8 @@ Route::group(['prefix'=>'manage','middleware'=>['isManage','auth:sanctum',config
     Route::get('/customers', App\Http\Livewire\Customer\AllCustomers::class)->name('customers');
     Route::get('/customers/new', App\Http\Livewire\Customer\NewCustomer::class)->name('customers.new');
     Route::get('/customers/edit/{id}', App\Http\Livewire\Customer\EditCustomer::class)->name('customers.edit');
+    //Order
+    Route::get('/orders', App\Http\Livewire\Customer\AllOrders::class)->name('orders');
+    Route::get('/orders/new/{customer_id}', App\Http\Livewire\Customer\NewOrder::class)->name('order.new');
 
 });

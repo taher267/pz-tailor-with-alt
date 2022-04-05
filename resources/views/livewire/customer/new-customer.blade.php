@@ -19,7 +19,7 @@
   <!-- Main content -->
   <div class="content">
     <div class="container">
-      <form class="form-horizontal" wire:submit.prevent='upDateCustomer'>
+      <form class="form-horizontal" wire:submit.prevent='addCustomer'>
       <div class="row">
         <div class="col-md-10 pl-3">
               <div class="form-group row">

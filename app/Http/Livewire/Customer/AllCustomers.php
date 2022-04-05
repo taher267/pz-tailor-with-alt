@@ -11,7 +11,7 @@ class AllCustomers extends Component
     use WithPagination;
     public function render()
     {
-        $allCustomers= Customer::paginate(10);
+        $allCustomers= Customer::orderBy('created_at', "DESC")->paginate(10);
         return view('livewire.customer.all-customers',compact('allCustomers'))->layout('layouts.starter');
     }
 }

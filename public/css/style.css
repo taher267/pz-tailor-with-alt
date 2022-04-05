@@ -1,13 +1,47 @@
-@media (max-width: 767px) {
-    .offset-xs-1 {
-        margin-left: 8.333336%;
-    }
+.fz-13 {
+    font-size: 13px;
+}
 
-    .offset-xs-2 {
-        margin-left: 16.666667%;
-    }
+.fz-14 {
+    font-size: 14px;
+}
 
-    .offset-xs-3 {
-        margin-left: 25%;
-    }
+.fz-15 {
+    font-size: 15px;
+}
+
+.fz-16 {
+    font-size: 16px;
+}
+
+.fz-17 {
+    font-size: 17px;
+}
+
+.fz-18 {
+    font-size: 18px;
+}
+
+.fz-19 {
+    font-size: 19px;
+}
+
+.fz-20 {
+    font-size: 20px;
+}
+
+.fz-21 {
+    font-size: 21px;
+}
+
+.fz-22 {
+    font-size: 22px;
+}
+
+.fz-23 {
+    font-size: 23px;
+}
+
+.fz-24 {
+    font-size: 24px;
 }

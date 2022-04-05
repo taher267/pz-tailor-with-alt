@@ -23,24 +23,22 @@ class NewCustomer extends Component
     {
         $this->validateOnly($fields,[
             'name'      =>  'required|regex:/^[\pL\s\-]+$/u',
-            'mobile'    => 'required|unique:customers|regex:/^(\+88)?(88)?01([0-9]){9}$/',
+            'mobile'    => 'required|unique:customers|regex:/^01([0-9]){9}$/',
             'email'     =>  'email|nullable|unique:customers',
             'address'   =>  'String|nullable',
             'photo'     =>  'image|mimes:jpg,jpeg,png|nullable'
         ],
-        // $this->customerErrorMessages($this->email,$this->mobile)
     );
     
     }
     public function addCustomer(){
         $this->validate([
             'name'      =>  'required|regex:/^[\pL\s\-]+$/u',
-            'mobile'    =>  'required|unique:customers|regex:/^(\+88)?(88)?01([0-9]){9}$/',
+            'mobile'    =>  'required|unique:customers|regex:/^01([0-9]){9}$/',
             'email'     =>  'email|nullable|unique:customers',
             'address'   =>  'String|nullable',
             'photo'     =>  'image|mimes:jpg,jpeg,png|nullable'
         ]);
-       
         $result = $this->addNewCustomerTrait();
         if ($result) {
             return redirect()->route('customers');

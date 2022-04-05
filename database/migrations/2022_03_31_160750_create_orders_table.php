@@ -20,10 +20,10 @@ return new class extends Migration
                 $table->integer('order_number')->unique();
                 $table->json('wages');
                 $table->json('courier_details')->nullable();
-                $table->json('payment_details')->nullable();
+                $table->json('transaction')->nullable();
                 $table->date('delivery_date');
                 $table->date('delivered_date')->nullable();
-                $table->enum('status', ['processing', 'cancled','completed','urgent','replaced','waiting','alter'])->nullable()->default('processing');
+                $table->enum('status', ['processing', 'cancled','completed','urgent','replaced','waiting','alter','notyet'])->nullable()->default('processing');
                 $table->json('order_sample_images')->nullable();
                 $table->timestamps();
                 $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

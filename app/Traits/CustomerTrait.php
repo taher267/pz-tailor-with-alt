@@ -5,24 +5,13 @@ use App\Models\Customer;
 
 trait CustomerTrait{
     use fileUploadDeleteTrait;
-    public function fixedMobile($mobile)
-    {
-        $newPhone;
-        if (strlen($mobile)===14) {
-            $newPhone=$mobile;
-        }elseif(strlen($mobile)===13){
-            $newPhone='+'.$mobile;
-        }else{
-            $newPhone='+88'.$mobile;
-        }
-        return $newPhone;
-    }
+    
    public function addNewCustomerTrait()
    {
         $customer              = new Customer();
         $customer->user_id     = auth()->user()->id;
         $customer->name        = ucwords($this->name);
-        $customer->mobile      = $this->fixedMobile($this->mobile);
+        $customer->mobile      = $this->mobile;
         $customer->address     = $this->address ?? null;
         $customer->email       = $this->email ?? null;
         if ($this->photo) {
@@ -40,7 +29,7 @@ trait CustomerTrait{
         $customer              = Customer::find($customer_id);
         $customer->user_id     = auth()->user()->id;
         $customer->name        = ucwords($this->name);
-        $customer->mobile      = $this->fixedMobile($this->mobile);
+        $customer->mobile      = $this->mobile;
         $customer->address     = $this->address ?? null;
         $customer->email       = $this->email ?? null;
         if ($this->newphoto) {
@@ -60,4 +49,34 @@ trait CustomerTrait{
         }
         return false;
    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   public function fixedMobile($mobile)
+    {
+        $newPhone;
+        if (strlen($mobile)===14) {
+            $newPhone=$mobile;
+        }elseif(strlen($mobile)===13){
+            $newPhone='+'.$mobile;
+        }else{
+            $newPhone='+88'.$mobile;
+        }
+        return $newPhone;
+    }
 }

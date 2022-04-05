@@ -13,12 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('size_charts', function (Blueprint $table) {
+        Schema::create('off_days', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('size');
-            $table->json('details');
-            //{"cloth_long": "30 inch", "resolution": "1600 x 900 pixles", "ports": {"hdmi": 1, "usb": 1}, "speakers": {"left": "10 watt", "right": "10 watt"}}
+            $table->date('delivered_date')->unique()->nullable();
+            $table->string('name_of_day')->unique()->nullable();
+            $table->string('purpose')->unique()->nullable();
+            $table->text('details')->nullable();
+            $table->timestamps();
         });
     }
 
@@ -29,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('size_charts');
+        Schema::dropIfExists('off_days');
     }
 };
