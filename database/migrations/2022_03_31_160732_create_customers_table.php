@@ -19,6 +19,9 @@ return new class extends Migration
             $table->string('name');
             $table->string('mobile')->unique();
             $table->string('email')->unique()->nullable();
+            $table->integer('order_number')->unique();
+            $table->json('courier_details')->nullable();
+            $table->enum('status', ['regular','irregular','sensitive'])->default('irregular');
             $table->string('address')->nullable();
             $table->string('photo')->nullable();
             $table->timestamps();

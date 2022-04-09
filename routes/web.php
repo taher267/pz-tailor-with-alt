@@ -36,6 +36,6 @@ Route::group(['prefix'=>'manage','middleware'=>['isManage','auth:sanctum',config
     Route::get('/customers/edit/{id}', App\Http\Livewire\Customer\EditCustomer::class)->name('customers.edit');
     //Order
     Route::get('/orders', App\Http\Livewire\Customer\AllOrders::class)->name('orders');
-    Route::get('/orders/new/{customer_id}', App\Http\Livewire\Customer\NewOrder::class)->name('order.new');
+    Route::get('/orders/new/{order_number}', App\Http\Livewire\Customer\NewOrder::class)->name('order.new');
 
 });

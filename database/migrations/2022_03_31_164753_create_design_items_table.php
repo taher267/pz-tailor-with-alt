@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('cloth_design_portions', function (Blueprint $table) {
+        Schema::create('design_items', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
             $table->string('type');
@@ -30,11 +30,11 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cloth_design_portions');
+        Schema::dropIfExists('design_items');
     }
 };
 
-// INSERT INTO `cloth_design_portions` (`id`, `name`, `type`, `apply_on`, `status`, `image`) VALUES
+// INSERT INTO `design_items` (`id`, `name`, `type`, `apply_on`, `status`, `image`) VALUES
 // (1, 'শেরওয়ানী রাউন্ড কলার ক্যাটালগ', 'collar', '{\"একছাটা\":1}', '0', NULL),
 // (2, 'শেরওয়ানী কলার', 'collar', '{\"একছাটা\":1}', '1', NULL),
 // (3, 'শেরওয়ানী কলার ক্যাটালগ', 'collar', '{\"একছাটা\":1}', '0', NULL),

@@ -3,10 +3,24 @@
   $URL = config('app.url');
 @endphp
     <!-- Brand Logo -->
-    <a href="index3.html" class="brand-link">
-      <img src="{{$URL.'/assets/alt/dist/img/AdminLTELogo.png'}}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-      <span class="brand-text font-weight-light">AdminLTE 3</span>
-    </a>
+    @auth
+      @if (Auth::user()->role ===1)
+        <a href="@if(Request::is('admin*')){{route('manage.dashboard')}}@else @if(Request::is('manage*')){{route('admin.dashboard')}}@endif @endif" class="brand-link">
+          {{-- <img src="{{$URL.'/assets/alt/dist/img/AdminLTELogo.png'}}" alt="" class="brand-image img-circle elevation-3" style="opacity: .8"> --}}
+          <i class="fa fa-dashboard ml-3"></i>
+          <span class="brand-text font-weight-light">
+            @if (Request::is('admin*'))
+                Go Manage
+                @else
+                @if (Request::is('manage*'))
+                Go Admin
+            @endif
+            @endif
+          </span>
+        </a>
+        @endif
+    @endauth
+    
 
     <!-- Sidebar -->
     <div class="sidebar">
@@ -16,7 +30,7 @@
           <img src="{{$URL.'/assets/alt/dist/img/user2-160x160.jpg'}}" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">Alexander Pierce</a>
+          <a href="#" class="d-block">{{Auth::user()->name}}</a>
         </div>
       </div>
 
