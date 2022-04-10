@@ -189,11 +189,9 @@
                                                     </div>
 
                                                     <div class="mb-2">
-                                                        <label for="enclosure">@error('cloth_enclosure')<span class="text-danger">পোশাকের ঘের{!!$message!!}</span> @else<span class="{{$cloth_enclosure==''?'text-danger':''}}">ঘের<sup class="fz-14">*</sup></span>@enderror</label>
+                                                        <label for="enclosure">@error('cloth_enclosure')<span class="text-danger">পোশাকের ঘের{!!$message!!}</span> @else<span class="">ঘের</span>@enderror</label>
                                                         <input wire:model.debounce.500ms="cloth_enclosure" type="text" class="form-control"
-                                                            id="enclosure" placeholder="ঘের" required>
-                                                        @error('cloth_enclosure')<div class="text-danger"> {!!$message!!}</div>
-                                                        @else <div class="invalid-feedback">পোশাকের ঘের দিন?</div> @enderror
+                                                            id="enclosure" placeholder="ঘের">
                                                     </div>
                                                 </div>
                                                 {{-- Body Part End --}}
@@ -247,26 +245,28 @@
                                                         </select> @endif
                                                     </div>
                                                     <div class="row mt-3 p-2 ">
-                                                        <div class="col-md-12"><label class="@error('plate_type')@else{{!$plate_type?'text-danger':''}}@enderror">কলারের ধরণ নির্বাচন করুন</label></div>
+                                                        <div class="col-md-12"><label class="@error('plate')@else{{!$plate?'text-danger':''}}@enderror">প্লেটের ধরণ নির্বাচন করুন</label></div>
                                                         <div class="col-md-6">
-                                                            <div class="card bg-dark text-white">
+                                                            <div class="card bg-dark text-white p-0">
                                                                 <img src="/assets/alt/dist/img/tailors/flat-plate.png" class="card-img" alt="...">
-                                                                <div class="card-img-overlay">
-                                                                    <div class="custom-control custom-radio">
-                                                                        <input type="radio" id="plate_type1" wire:model="plate_type" value="1" name="plate_type" required class="custom-control-input @error('plate_type')form-control is-invalid @enderror">
-                                                                        <label class="custom-control-label" for="plate_type1"></label>
+                                                                <div class="card-img-overlay p-1">
+                                                                    <div class="form-group form-check text-center mt-3">
+                                                                        <input type="checkbox" class="form-check-input" wire:model="plate.flat" id="plate_1">
+                                                                        <label class="form-check-label" for="plate_1"></label>
                                                                     </div>
+                                                                    <textarea class="bg-transparent mw-100" wire:model="plate.flat_field"></textarea>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <div class="card bg-dark text-white">
-                                                                <img src="/assets/alt/dist/img/tailors/flat-plate.png" class="card-img" alt="...">
-                                                                <div class="card-img-overlay">
-                                                                    <div class="custom-control custom-radio">
-                                                                        <input type="radio" id="plate_type2" wire:model="plate_type" value="2" name="plate_type" required class="custom-control-input @error('plate_type')form-control is-invalid @enderror">
-                                                                        <label class="custom-control-label" for="plate_type2"></label>
+                                                            <div class="card bg-dark text-white p0">
+                                                                <img src="/assets/alt/dist/img/tailors/angle-plate.png" class="card-img" alt="...">
+                                                                <div class="card-img-overlay p-1">
+                                                                    <div class="form-group form-check text-center mt-3">
+                                                                        <input type="checkbox" class="form-check-input" wire:model="plate.angle" id="plate_2">
+                                                                        <label class="form-check-label" for="plate_2"></label>
                                                                     </div>
+                                                                    <textarea class="bg-transparent mw-100" wire:model="plate.angle_field"></textarea>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -289,28 +289,29 @@
                                                     <div class="row mt-3 p-2 ">
                                                         <div class="col-md-12"><label class="@error('pocket_type')text-danger @enderror">পকেটের ধরণ নির্বাচন করুন</label></div>
                                                         <div class="col-md-6">
-                                                            <div class="card bg-dark text-white">
-                                                                <img src="/assets/alt/dist/img/tailors/round-pocket.png" class="card-img" alt="...">
-                                                                <div class="card-img-overlay">
-                                                                    <div class="custom-control custom-radio">
-                                                                        <input type="radio" id="pocket_type1" name="pocket_type" wire:model="pocket_type" value="1" class="custom-control-input @error('pocket_type')form-control is-invalid @enderror">
-                                                                        <label class="custom-control-label" for="pocket_type1"></label>
+                                                            <div class="card bg-dark text-white p-0">
+                                                                <img src="/assets/alt/dist/img/tailors/round-plate.png" class="card-img" alt="...">
+                                                                <div class="card-img-overlay p-1">
+                                                                    <div class="form-group form-check text-center mt-3">
+                                                                        <input type="checkbox" class="form-check-input" wire:model="pocket.flat" id="pocket_1">
+                                                                        <label class="form-check-label" for="pocket_1"></label>
                                                                     </div>
+                                                                    <textarea class="bg-transparent mw-100" wire:model="pocket.flat_field"></textarea>
                                                                 </div>
                                                             </div>
-                                                            
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <div class="card bg-dark text-white">
-                                                                <img src="/assets/alt/dist/img/tailors/round-pocket.png" class="card-img" alt="...">
-                                                                <div class="card-img-overlay">
-                                                                    <div class="custom-control custom-radio">
-                                                                        <input type="radio" id="pocket_type2" wire:model="pocket_type" value="2" name="pocket_type" class="custom-control-input @error('pocket_type')form-control is-invalid @enderror">
-                                                                        <label class="custom-control-label" for="pocket_type2"></label>
+                                                            <div class="card bg-dark text-white p0">
+                                                                <img src="/assets/alt/dist/img/tailors/angle-pocket.png" class="card-img" alt="...">
+                                                                <div class="card-img-overlay p-1">
+                                                                    <div class="form-group form-check text-center mt-3">
+                                                                        <input type="checkbox" class="form-check-input" wire:model="pocket.angle" id="pocket_2">
+                                                                        <label class="form-check-label" for="pocket_2"></label>
                                                                     </div>
+                                                                    <textarea class="bg-transparent mw-100" wire:model="pocket.angle_field"></textarea>
                                                                 </div>
                                                             </div>
-                                                        </div>  
+                                                        </div> 
                                                     </div>
                                                 </div>
                                             </div>
@@ -661,7 +662,7 @@
                                                                 //     $subTotal=$subTotal+$val;
                                                                 // }
                                                             @endphp
-                                                        <div class="col-md-10 subtotal-wageses-wrapper"><h5 class="border-top text-right"><span>Grand Total= </span><span class="text-info">$subTotal BDT</span></h5></div>
+                                                        
                                                     </div>
                                                 </div>
                                             </div>
@@ -693,6 +694,14 @@
                             </div>
                         </div>
                         </div>
+                        <div class="col-md-10 subtotal-wageses-wrapper">
+                            @php
+                                $upperTotal=isset($upper['total'])?$upper['total']:0;
+                                $lowerTotal=isset($lower['total'])?$lower['total']:0;
+                                $grandTotal = $upperTotal+$lowerTotal;
+                            @endphp
+                            <h5 class="border-top text-right"><span>মোট মজুরি= {{$grandTotal}}</span><span class="text-info"> টাকা
+                                ।</span></h5></div>
                     </div>
                 </div>
               <button type="submit" class="btn btn-primary"> <i class="fa fa-cart-plus" aria-hidden="true"></i> Place</button>

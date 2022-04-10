@@ -40,21 +40,22 @@ trait OrderErrorRuleTrait {
             'sleeve_pasting'        => 'nullable',
             'cloth_throat'          => 'nullable',
             'cloth_collar'          => 'nullable',
+            'cloth_enclosure'       => 'nullable|string',
             'collar_measure_type'   => 'numeric|nullable',
             'cloth_mora'            => 'nullable',
             'noke_shoho'            => 'nullable',
             'cloth_additional'      => 'nullable|string',
-            'pocket_type'           => 'nullable|numeric',
+            'plate'                 => 'nullable',
+            'pocket'                => 'nullable',
             'up_designs_check.*'    => 'nullable|numeric',
             'up_design_fields.*'    => 'nullable|numeric',
             'lo_designs_check.*'    => 'nullable|numeric',
             'lo_design_fields.*'    => 'nullable|numeric',
-            'wages_selected_products'=> 'required|array',
-            'wages'                 => 'required',
-            'quantity'                 => 'required',
-            'discount.*'              => 'nullable|array',
-            'advance.*'               => 'nullable|array',
-            'total.*'                 => 'required|array'
+            // 'wages'                 => 'required',
+            // 'quantity'                 => 'required',
+            // 'discount.*'              => 'nullable|array',
+            // 'advance.*'               => 'nullable|array',
+            // 'total.*'                 => 'required|array'
         ];
     }
 
@@ -64,10 +65,8 @@ trait OrderErrorRuleTrait {
             'up_products'          => 'required_without:lo_products|not_in:0',
             //Measure
             'cloth_long'            => 'required|string',
-            'cloth_enclosure'       => 'required|string',
             'hand_long'             => 'required|string',
-            'cloth_shoulder'        => 'required|string',
-            'plate_type'            => 'required'
+            'cloth_shoulder'        => 'required|string'
         ];
     }
 
@@ -109,7 +108,7 @@ trait OrderErrorRuleTrait {
 //     'cloth_mora'            => 'nullable|numeric|max:80',
 //     'noke_shoho'            => 'nullable|numeric|max:80',
 //     'plate_type'            => 'required_with:up_products',
-//     'pocket_type'           => 'required',
+//     'pocket'           => 'required',
 //     'cloth_additional'      => 'nullable|string',
 //     //lower part
 //     'length'                => 'required_with:lo_products|numeric',

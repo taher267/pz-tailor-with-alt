@@ -86,34 +86,17 @@ trait OrderTrait {
     public function wagesesCalculation()
     {
         //panzabi, shart fotual upper dress
-        if (isset($this->upper['wages']) && $this->upper['wages'] != null && is_numeric($this->upper['wages']) && $this->upper['quantity'] &&  $this->upper['quantity'] != null && is_numeric($this->upper['quantity'])) {
+        if (isset($this->upper['wages']) && $this->upper['wages'] != null && is_numeric($this->upper['wages']) && isset($this->upper['quantity']) && $this->upper['quantity'] &&  $this->upper['quantity'] != null && is_numeric($this->upper['quantity'])) {
             $this->upper['total'] = $this->upper['quantity'] * $this->upper['wages'] - (isset($this->upper['discount']) && $this->upper['discount'] ? $this->upper['discount']: 0);
         }else {
             $this->upper['total']=0;
         }
         // pazama pannt, trowser lower dress
-        if (isset($this->lower['wages']) && $this->lower['wages'] != null && is_numeric($this->lower['wages']) && $this->lower['quantity'] &&  $this->lower['quantity'] != null && is_numeric($this->lower['quantity'])) {
+        if (isset($this->lower['wages']) && $this->lower['wages'] != null && is_numeric($this->lower['wages']) && isset($this->lower['quantity']) && $this->lower['quantity'] &&  $this->lower['quantity'] != null && is_numeric($this->lower['quantity'])) {
                 $this->lower['total'] = $this->lower['quantity'] * $this->lower['wages'] - (isset($this->lower['discount']) && $this->lower['discount'] ? $this->lower['discount']: 0);
         }else {
             $this->lower['total']=0;
         }
-        
-
-    //    dd(gettype($this->up_products));
-    //    foreach ($this->quantity as $k => $value) {
-    //         if (isset($this->wages[$k]) && $this->wages[$k] != null && is_numeric($this->wages[$k]) && isset($this->quantity[$k]) && $this->quantity[0] != null && is_numeric($this->quantity[0])) {
-    //         if($this->wages[$k]>0 || $this->quantity[$k]): $this->total[$k] = $this->quantity[$k] * $this->wages[$k] - (isset($this->discount[$k]) && is_numeric($this->discount[$k]) ? $this->discount[$k]: 0); endif;
-    //         }else {
-    //             if (isset($this->discount[$k])=='') {
-    //                 $this->discount[$k]=0;
-    //             }
-                
-    //             if (isset($this->advance[$k])=='') {
-    //                 $this->advance[$k]=0;
-    //             }
-    //             $this->total[$k]=0;
-    //         }
-    //    }
     }
     public function upperProductsJsonEncode()
     {

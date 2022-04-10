@@ -25,7 +25,7 @@ class NewOrder extends Component
      * Panzabi
      */
     //Order Item 
-    public $up_products, $upper,$lower, $lo_products, $cloth_long, $cloth_body, $body_loose, $cloth_belly, $belly_loose, $cloth_enclosure, $hand_long, $sleeve_enclosure, $sleeve_pasting, $cloth_throat, $cloth_collar, $collar_measure_type, $cloth_shoulder, $cloth_mora, $noke_shoho, $designs_check, $design_fields, $cloth_additional,  $order_sample_images, $plate_type, $pocket_type, $readymade_size, $delivery_charge;
+    public $up_products, $upper,$lower, $lo_products, $cloth_long, $cloth_body, $body_loose, $cloth_belly, $belly_loose, $cloth_enclosure, $hand_long, $sleeve_enclosure, $sleeve_pasting, $cloth_throat, $cloth_collar, $collar_measure_type, $cloth_shoulder, $cloth_mora, $noke_shoho, $designs_check, $design_fields, $cloth_additional,  $order_sample_images, $plate, $pocket, $readymade_size, $delivery_charge;
     /**
      * wageses
      */
@@ -98,7 +98,8 @@ class NewOrder extends Component
     public function addOrder()
     {
         $this->validate($this->commonOrderErrorRule());
-        $result  = $this->placeOrder($this->customer_id);
+        dd(array_filter($this->plate));
+        // $result  = $this->placeOrder($this->customer_id);
     }
     public function designsShowHideControl()
     {
