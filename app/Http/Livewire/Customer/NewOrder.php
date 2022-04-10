@@ -25,7 +25,7 @@ class NewOrder extends Component
      * Panzabi
      */
     //Order Item 
-    public $up_products=[], $lo_products=[], $cloth_long, $cloth_body, $body_loose, $cloth_belly, $belly_loose, $cloth_enclosure, $hand_long, $sleeve_enclosure, $sleeve_pasting, $cloth_throat, $cloth_collar, $collar_measure_type, $cloth_shoulder, $cloth_mora, $noke_shoho, $designs_check, $design_fields, $cloth_additional,  $order_sample_images, $plate_type, $pocket_type, $readymade_size, $delivery_charge;
+    public $up_products, $upper,$lower, $lo_products, $cloth_long, $cloth_body, $body_loose, $cloth_belly, $belly_loose, $cloth_enclosure, $hand_long, $sleeve_enclosure, $sleeve_pasting, $cloth_throat, $cloth_collar, $collar_measure_type, $cloth_shoulder, $cloth_mora, $noke_shoho, $designs_check, $design_fields, $cloth_additional,  $order_sample_images, $plate_type, $pocket_type, $readymade_size, $delivery_charge;
     /**
      * wageses
      */
@@ -56,27 +56,27 @@ class NewOrder extends Component
         $this->mobile       = $customer->mobile;
         $this->photo        = $customer->photo;
         $this->delivery_date = date( "Y-m-d", strtotime( date( "Y-m-d")." +10 days" ));
-        $this->weekendholiday=4;
+        $this->weekendholiday = 4;
         
     }
     public function updated($fields)
     {
         
-        if (!$this->force_previous_date) {
-            $this->validateOnly($fields,$this->forceIdWithDateErrorRule());
-        }
+        // if (!$this->force_previous_date) {
+        //     $this->validateOnly($fields,$this->forceIdWithDateErrorRule());
+        // }
         $this->validateOnly($fields,$this->commonOrderErrorRule());
-        //order delivery validation
-        if ( $this->order_delivery ) {
-            $this->validateOnly($fields,$this->orderDeliveryErrorRule());
-        }
+        // //order delivery validation
+        // if ( $this->order_delivery ) {
+        //     $this->validateOnly($fields,$this->orderDeliveryErrorRule());
+        // }
 
-        if ( count($this->up_products)>0) {
-            $this->validateOnly($fields,$this->upProductsPresentErrorRule());
-        }
-        if ( count($this->up_products)>0) {
-            $this->validateOnly($fields,$this->loProductsPresentErrorRule());
-        }
+        // if ( $this->up_products>0) {
+        //     $this->validateOnly($fields,$this->upProductsPresentErrorRule());
+        // }
+        // if ( $this->up_products>0) {
+        //     $this->validateOnly($fields,$this->loProductsPresentErrorRule());
+        // }
     }
     /**
      * Fill empty style field
@@ -127,15 +127,15 @@ class NewOrder extends Component
     }
     public function remove($i)
     {
-        if (count($this->wages_inputs)<2) {
-            return;
-        }
-        unset($this->wages_inputs[$i]);
-        unset($this->wages[$i]);
-        unset($this->total[$i]);
-        unset($this->quantity[$i]);
-        unset($this->discount[$i]);
-        unset($this->advance[$i]);
+        // if (count($this->wages_inputs)<2) {
+        //     return;
+        // }
+        // unset($this->wages_inputs[$i]);
+        // unset($this->wages[$i]);
+        // unset($this->total[$i]);
+        // unset($this->quantity[$i]);
+        // unset($this->discount[$i]);
+        // unset($this->advance[$i]);
     }
     public function render()
     {

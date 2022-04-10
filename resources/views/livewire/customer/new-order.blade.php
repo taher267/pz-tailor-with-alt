@@ -110,25 +110,19 @@
                                     <div class="col-lg-12 py-3 @error('up_products')bg-warning @enderror product_name cloth_name">
                                         <h5 class="d-block mb-4">পাঞ্জাবি শার্ট ফতুয়া ইত্যাদি জাতীয় পোশাক</h5>
                                         <div class="row ">
-                                            @if ($upperProductsPart)
-                                            @foreach ($upperProductsPart as $Uproduct)
-                                            <div class="col-sm-2" style="position: relative;">
-                                                <div class="custom-control custom-checkbox mb-1 d-inline-block">
-                                                    <input type="checkbox" wire:model="up_products" {{--wire:change="designsShowHideControl"--}} name="dresses"
-                                                        value="{{$Uproduct->id}}"
-                                                        class="custom-control-input @error('up_products')form-control is-invalid @enderror"
-                                                        id="product_{{$Uproduct->id}}">
-                                                    <label class="custom-control-label"
-                                                        for="product_{{$Uproduct->id}}">{{$Uproduct->name}} <img
-                                                            src="{{asset('assets/img/undraw_profile.svg')}}"
-                                                            class="img-thumbnail-" width="30" alt=""></label>
-                                                </div>
+                                            <div class="col-md-6">
+                                                <select wire:model="up_products" class="custom-select d-block w-100 @error('up_products')is-invalid @enderror"
+                                                    id="up_products" required>
+                                                    <option value="0">নির্বচন করুনঃ</option>
+                                                    @foreach ($upperProductsPart as $upProduct)
+                                                    <option>{{$upProduct->name}}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
-                                            @endforeach
-                                            @endif
-                                        </div> {{--dresh panzabi .row end--}}
-                                        {{-- @endforeach --}}
-                                        @error('up_products') <div class="invalid-feedback"> {!!$message!!} </div> @enderror
+                                            
+                                            @error('up_products') <div class="invalid-feedback"> {!!$message!!} </div> @enderror
+                                        </div>
+                                        
                                     </div>
                                     <div class="col-xl-12">
                                         <div class="row">
@@ -150,7 +144,7 @@
                                             @endif --}}
                                         </div>
                                     </div>
-                                    @if(count($up_products)>0 && in_array($up_products[0], $uperArr))
+                                    @if($up_products)
                                         {{-- Measure ment area --}}
                                         <div class="col-md-12 pt-3">
                                             <div class="row">
@@ -382,6 +376,70 @@
                                             </div>
                                         </div>
                                         {{-- Upper Design End --}}
+                                        {{-- Wages --}}
+                                        <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-xl-12">
+                                                <div class="product_role_container container-fluid">
+                                                    <!-- DataTales Example -->
+                                                    <div class="card shadow mb-4">
+                                                        <div class="card-header">
+                                                            <div class="row">
+                                                                <div class="col-sm-6"><h3>মজুরি(WAGES)</h3></div>
+                                                                <div class="col-sm-6">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <div class="row wages-item pb-sm-3">
+                                                                <div class="col-lg-2 col-sm-6">
+                                                                    <h6 class="text-center border-bottom mb-2 pb-1">পোশাকঃ</h6>
+                                                                    <p class="text-info">
+                                                                       
+                                                                    </p>
+                                                                </div>
+                                                                <div class="col-lg-2 col-sm-6">
+                                                                    <h6 class="text-center border-bottom mb-2 pb-1">@error('upper.quantity')<span class="text-danger">পরিমাণ{!!$message!!}
+                                                                    </span>@else পরিমাণ @enderror </h6>
+                                                                    <p><input type="number" min="1" wire:model="upper.quantity"
+                                                                            class="form-control @error('upper.quantity')is-invalid @enderror" placeholder="পরিমাণ" required/></p>
+                                                                </div>
+                                                                <div class="col-lg-2 col-sm-6">
+                                                                    <h6 class="text-center border-bottom mb-2 pb-1">@error('upper.wages')<span
+                                                                            class="text-danger">মজুরি{!!$message!!}</span> @else মজুরি
+                                                                        @enderror </h6>
+                                                                    <p>
+                                                                        <input type="number" wire:model="upper.wages" class="form-control @error('upper.wages')is-invalid @enderror"
+                                                                            placeholder="মজুরি" required/>
+                                                                    </p>
+                                                                </div>
+                                                                <div class="col-md-2 col-sm-6">
+                                                                    <h6 class="text-center border-bottom mb-2 pb-1">ছাড়
+                                                                        @error('upper.discount')<span class="text-danger">{!!$message!!}</span>
+                                                                        @enderror </h6>
+                                                                    <p><input type="number" wire:model="upper.discount" class="form-control"
+                                                                            placeholder="ছাড়"></p>
+                                                                </div>
+                                                                <div class="col-md-2 col-sm-6">
+                                                                    <h6 class="text-center border-bottom mb-2 pb-1">অগ্রিম
+                                                                        @error('upper.advance')<span class="text-danger">{!!$message!!}</span>
+                                                                        @enderror </h6>
+                                                                    <p><input type="number" wire:model="upper.advance" class="form-control @error('upper.advance')is-invalid @enderror"
+                                                                            placeholder="অগ্রিম.."/></p>
+                                                                </div>
+                                                                <div class="col-lg-2 col-sm-6">
+                                                                    <h6 class="text-center border-bottom mb-2 pb-1">@error('upper.total')<span class="text-danger">মোটের পরিমান{!!$message!!}</span>
+                                                                        @else মোট@enderror</h6>
+                                                                    <p><input type="number" wire:model="upper.total" class="form-control @error('upper.total')is-invalid @enderror"
+                                                                            placeholder="মোট" required/></p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     @endif
                                 </div>
                             </div>
@@ -390,11 +448,21 @@
                                 <div class="col-lg-12 py-5 @error('lo_products')bg-warning @enderror product_name cloth_name">
                                     <h5 class="d-block mb-4">সালোয়ার, পাজামা,প্যান্ট ইত্যাদি জাতীয় পোশাক</h5>
                                     <div class="row ">
-                                        @if ($lowerProductsPart)
+                                        <div class="col-md-6">
+                                            <select wire:model="lo_products" class="custom-select d-block w-100 @error('lo_products')is-invalid @enderror"
+                                                    id="up_products" required>
+                                                    <option value="0">নির্বচন করুনঃ</option>
+                                                    @foreach ($lowerProductsPart as $loProduct)
+                                                    <option>{{$loProduct->name}}</option>
+                                                    @endforeach
+                                                </select>
+                                        </div>
+                                        {{-- @if ($lowerProductsPart)
                                         @foreach ($lowerProductsPart as $Lproduct)
+
                                         <div class="col-sm-2 col-xs-6" style="position: relative;">
                                             <div class="custom-control custom-checkbox mb-1 d-inline-block">
-                                                <input type="checkbox" wire:model="lo_products" name="dresses"
+                                                <input type="radio" wire:model="lo_products" name="dresses"
                                                     value="{{$Lproduct->id}}"
                                                     class="custom-control-input @error('lo_products')form-control is-invalid @enderror"
                                                     id="product_{{$Lproduct->id}}">
@@ -405,7 +473,7 @@
                                             </div>
                                         </div>
                                         @endforeach
-                                        @endif
+                                        @endif --}}
 
                                     </div> {{--dresh panzabi .row end--}}
                                     {{-- @endforeach --}}
@@ -431,7 +499,7 @@
                                         @endif --}}
                                     </div>
                                 </div>
-                                @if(count($lo_products)>0 && in_array($lo_products[0], $lowerArr))
+                                @if($lo_products)
                                     {{-- Measure ment area --}}
                                     <div class="col-md-12 pt-4">
                                         <div class="row">
@@ -538,12 +606,72 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="col-md-12">
+                                            <div class="">
+                                                <div class="card shadow mb-4">
+                                                    <div class="card-header">
+                                                        <div class="row">
+                                                            <div class="col-sm-6"><h3>মজুরি(WAGES)</h3></div>
+                                                            <div class="col-sm-6">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="row wages-item pb-sm-3">
+                                                            <div class="col-lg-2 col-sm-6"></div>
+                                                                <div class="col-lg-2 col-sm-6">
+                                                                    <h6 class="text-center border-bottom mb-2 pb-1">@error('lower.quantity')<span class="text-danger">পরিমাণ{!!$message!!}
+                                                                    </span>@else পরিমাণ @enderror </h6>
+                                                                    <p><input type="number" min="1" wire:model.debounce.500ms="lower.quantity"
+                                                                            class="form-control @error('lower.quantity')is-invalid @enderror" placeholder="পরিমাণ" required/></p>
+                                                                </div>
+                                                                <div class="col-lg-2 col-sm-6">
+                                                                    <h6 class="text-center border-bottom mb-2 pb-1">@error('lower.wages')<span
+                                                                            class="text-danger">মজুরি{!!$message!!}</span> @else মজুরি
+                                                                        @enderror </h6>
+                                                                    <p>
+                                                                        <input type="number" wire:model.debounce.500ms="lower.wages" class="form-control @error('lower.wages')is-invalid @enderror"
+                                                                            placeholder="মজুরি" required/>
+                                                                    </p>
+                                                                </div>
+                                                                <div class="col-md-2 col-sm-6">
+                                                                    <h6 class="text-center border-bottom mb-2 pb-1">ছাড়
+                                                                        @error('discount')<span class="text-danger">{!!$message!!}</span>
+                                                                        @enderror </h6>
+                                                                    <p><input type="number" wire:model.debounce.500ms="lower.discount" class="form-control @error('lower.discount')is-invalid @enderror""
+                                                                            placeholder="ছাড়"></p>
+                                                                </div>
+                                                                <div class="col-md-2 col-sm-6">
+                                                                    <h6 class="text-center border-bottom mb-2 pb-1">অগ্রিম
+                                                                        @error('lower.advance')<span class="text-danger">{!!$message!!}</span>
+                                                                        @enderror </h6>
+                                                                    <p><input type="number" wire:model.debounce.500ms="lower.advance" class="form-control @error('lower.advance')is-invalid @enderror"
+                                                                            placeholder="অগ্রিম.."/></p>
+                                                                </div>
+                                                                <div class="col-lg-2 col-sm-6">
+                                                                    <h6 class="text-center border-bottom mb-2 pb-1">@error('lower.total')<span class="text-danger">মোটের পরিমান{!!$message!!}</span>
+                                                                        @else মোট@enderror</h6>
+                                                                    <p><input type="number" wire:model.debounce.500ms="lower.total" class="form-control @error('lower.total')is-invalid @enderror"
+                                                                            placeholder="মোট" required/></p>
+                                                                </div>
+                                                            </div>
+                                                            @php
+                                                                // $subTotal=0;
+                                                                // foreach (array_filter($total) as $val) {
+                                                                //     $subTotal=$subTotal+$val;
+                                                                // }
+                                                            @endphp
+                                                        <div class="col-md-10 subtotal-wageses-wrapper"><h5 class="border-top text-right"><span>Grand Total= </span><span class="text-info">$subTotal BDT</span></h5></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                         {{-- Lower Design End --}}
                                     </div>
+
                                 @endif
                             </div>
                             <div class="row">
-                                {{-- <div class="col-md-12"></div> --}}
                                 <div class="col-lg-6 col-sm-12 mx-lg-auto mb-3">
                                     <h6>অর্ডারের নমুনা ছবিঃ</h6>
                                     <div class="custom-file my-1">
@@ -564,146 +692,16 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        {{-- @if (count($up_products)>0||count($lo_products)>0)
-                            
-                        @endif --}}
-                        <div class="col-xl-12">
-                            <div class="product_role_container container-fluid">
-                                <!-- DataTales Example -->
-                                <div class="card shadow mb-4">
-                                    <div class="card-header">
-                                        <div class="row">
-                                            <div class="col-sm-6"><h3>মজুরি(WAGES)</h3></div>
-                                            <div class="col-sm-6">
-                                                <div class="form-floating">
-                                                    <input type="url" class="form-control @error('wages_screenshot_url')is-invalid @enderror" id="wages-screenshot" wire:model.debounce.500ms="wages_screenshot_url" placeholder="https://example.com" required/>
-                                                    <label for="wages-screenshot">@error('wages_screenshot_url')<div class="text-danger">মজুরীর স্ক্রিনশট লিংক{!!$message!!}</div>@else Wages Screenshot URL @enderror </label>
-                                                  </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-lg-2 text-center">
-                                                <h6 class=" border-bottom mb-2 pb-1">পোশাক</h6>
-                                                {{-- <p class="ordered_products">
-                                                    @foreach ($up_products as $key=> $product)
-                                                        <span title="{{count($lo_products)}}">{{$allproducts->where('id',$product)->first()->name}}@if(($key+1)===count($up_products) && count($lo_products)==0)@else,@endif</span>                                                       
-                                                    @endforeach
-                                                    @foreach ($lo_products as $key=> $product)
-                                                        <span>{{$allproducts->where('id',$product)->first()->name}}@if(($key+1)!==count($lo_products)),@endif</span>
-                                                    @endforeach
-                                                </p> --}}
-                                            </div>
-                                            <div class="col-lg-10 wageses-wrapper">
-                                                {{-- <h3>{{var_dump(count($wages_selected_products)>0 && array_values($wages_selected_products))}}</h3> --}}
-                                                @foreach ($wages_inputs as $key=> $input)
-                                                    <div class="row wages-item pb-sm-3">
-                                                        <div class="col-lg-2 col-sm-6">
-                                                            <div class="form-group">
-                                                                <h6 class="text-center border-bottom mb-2 pb-1 @if($key===0) d-block @else d-md-none @endif">@error('wages_selected_products.'.$key)<span class="text-danger">নির্বাচন করুনঃ {!!$message!!}
-                                                                </span>@else নির্বাচন করুনঃ @enderror</h6>
-                                                                @php
-                                                                    $uid= $wages_selected_products;
-                                                                    $selectStatus = false;
-                                                                    if (count($wages_selected_products)) {
-                                                                        // $indexes = array_keys($uid, $wages_selected_products[$key]);
-                                                                        // $selectStatus= count($indexes)>0?true:false;
-                                                                    }                                                         
-                                                                @endphp
-                                                                <select class="form-control {{--count($wages_selected_products)==0 && !isset($wages_selected_products[$key]) ?'is-invalid':''}} {{--/*&& count(array_keys(count($wages_selected_products)))==0--}} @error('wages_selected_products')is-invalid @enderror" wire:model="wages_selected_products.{{$key}}" required>
-  
-                                                                    {{-- <option>{{var_dump(count($wages_selected_products)>0 && array_values($wages_selected_products)&& array_values())}}</option> --}}
-                                                                    <option>...</option>
-                                                                    @foreach ($up_products as $uproduct)
-                                                                    @php
-                                                                        $UselectedProduct= $allproducts->where('id',$uproduct)->first()->name;
-                                                                    @endphp     
-                                                                        <option>{{$UselectedProduct}}</option>
-                                                                    @endforeach
-
-                                                                    @foreach ($lo_products as $lproduct)
-                                                                    @php
-                                                                        $LselectedProduct= $allproducts->where('id',$lproduct)->first()->name;
-                                                                    @endphp  
-                                                                        <option value="{{$LselectedProduct}}">{{$LselectedProduct}}</option>
-                                                                    @endforeach
-                                                                </select>
-                                                                <div class="invalid-feedback">আইটেম এর পরিমান দিন!</div>
-                                                              </div>
-                                                        </div>
-                                                        <div class="col-lg-2 col-sm-6">
-                                                            <h6 class="text-center border-bottom mb-2 pb-1 @if($key===0) d-block @else d-md-none @endif">@error('quantity.'.$key)<span class="text-danger">পরিমাণ{!!$message!!}
-                                                            </span>@else পরিমাণ @enderror </h6>
-                                                            <p><input type="number" min="1" wire:model.debounce.500ms="quantity.{{$key}}"
-                                                                    class="form-control @error('quantity.'.$key)is-invalid @enderror" placeholder="পরিমাণ" required/></p>
-                                                        </div>
-                                                        <div class="col-lg-2 col-sm-6">
-                                                            <h6 class="text-center border-bottom mb-2 pb-1 @if($key===0) d-block @else d-md-none @endif">@error('wages.'.$key)<span
-                                                                    class="text-danger">মজুরি{!!$message!!}</span> @else মজুরি
-                                                                @enderror </h6>
-                                                            <p>
-                                                                <input type="number" wire:model.debounce.500ms="wages.{{$key}}" class="form-control @error('wages.'.$key)is-invalid @enderror"
-                                                                    placeholder="মজুরি" required/>
-                                                            <div class="invalid-feedback">আইটেম এর পরিমান দিন!</div>
-                                                            </p>
-                                                        </div>
-                                                        <div class="col-md-1 col-sm-6">
-                                                            <h6 class="text-center border-bottom mb-2 pb-1 @if($key===0) d-block @else d-md-none @endif">ছাড়
-                                                                @error('discount.'.$key)<span class="text-danger">{!!$message!!}</span>
-                                                                @enderror </h6>
-                                                            <p><input type="number" wire:model.debounce.500ms="discount.{{$key}}" class="form-control"
-                                                                    placeholder="ছাড়"></p>
-                                                        </div>
-                                                        <div class="col-md-1 col-sm-6">
-                                                            <h6 class="text-center border-bottom mb-2 pb-1 @if($key===0) d-block @else d-md-none @endif">অগ্রিম
-                                                                @error('advance.'.$key)<span class="text-danger">{!!$message!!}</span>
-                                                                @enderror </h6>
-                                                            <p><input type="number" wire:model.debounce.500ms="advance.{{$key}}" class="form-control @error('advance.'.$key)is-invalid @enderror"
-                                                                    placeholder="অগ্রিম.."/></p>
-                                                        </div>
-                                                        <div class="col-lg-2 col-sm-6">
-                                                            <h6 class="text-center border-bottom mb-2 pb-1 @if($key===0) d-block @else d-md-none @endif">@error('total.'.$key)<span class="text-danger">মোটের পরিমান{!!$message!!}</span>
-                                                                @else মোট@enderror</h6>
-                                                            <p><input type="number" wire:model.debounce.500ms="total.{{$key}}" class="form-control @error('total.'.$key)is-invalid @enderror"
-                                                                    placeholder="মোট" required/></p>
-                                                        </div>
-                                                        <div class="col-lg-2 col-sm-12 @if($key===0)pt-md-4 @endif">
-                                                            @if ($key>0)
-                                                                <button type="button" class="btn btn-danger btn-sm w-100 decrise-wages" wire:click="remove({{$key}})"><i class="fa fa-minus"></i>Remove</button>
-                                                            @else
-                                                                <button type="button" class="btn btn-primary btn-sm w-100 increase-wages @if($key===0) mt-md-2 @endif" wire:click="add(1)"><i class="fa fa-plus"></i> Add</button>
-                                                            @endif
-                                                        </div>
-                                                    </div>
-                                                @endforeach
-                                                @php
-                                                    $subTotal=0;
-                                                    foreach (array_filter($total) as $val) {
-                                                        $subTotal=$subTotal+$val;
-                                                    }
-                                                @endphp
-                                                <div class="col-md-10 subtotal-wageses-wrapper"><h5 class="border-top text-right"><span>Grand Total= </span><span class="text-info">{{$subTotal}} BDT</span></h5></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
+                </div>
               <button type="submit" class="btn btn-primary"> <i class="fa fa-cart-plus" aria-hidden="true"></i> Place</button>
-        </form>
+            </form>
         </div>
       </div>
     <div class="clipboard" style="clip-path: polygon(85% 6%, 70% 15%, 30% 15%, 15% 5%, 0% 25%, 10% 45%, 10% 75%, 25% 90%, 40% 95%, 60% 95%, 75% 91%, 90% 75%, 90% 45%, 100% 25%);">
-    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Obcaecati ad quaerat repellendus temporibus recusandae tenetur repellat optio nostrum? Adipisci voluptates ut dolores ullam alias rerum, ipsum magnam aperiam aliquid distinctio!</div>
-    @php
-        $uid= array(12,23,12,4,2,5,56);
-        $indexes = array_keys($uid, 12); //array(0, 1)
-        echo count($indexes);
-    @endphp
+        </div>
+    </div>
 </div>
 
 @push('scripts')

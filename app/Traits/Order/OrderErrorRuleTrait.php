@@ -28,8 +28,8 @@ trait OrderErrorRuleTrait {
         return[
             'delivery_date'         => 'required|date|date_format:Y-m-d',
             'order_date'            => 'nullable|date|date_format:Y-m-d|before_or_equal:delivery_date',
-            'up_products'          => 'required_without:lo_products|array',
-            'lo_products'          => 'required_without:up_products|array',
+            'up_products'          => 'required_without:lo_products|not_in:0',
+            'lo_products'          => 'required_without:up_products|not_in:0',
             'order_sample_images.*'=>'image|mimes:jpg,jpeg,png|nullable',
             //Measure
             'cloth_body'            => 'nullable',
@@ -50,19 +50,18 @@ trait OrderErrorRuleTrait {
             'lo_designs_check.*'    => 'nullable|numeric',
             'lo_design_fields.*'    => 'nullable|numeric',
             'wages_selected_products'=> 'required|array',
-            'wages'                 => 'required|array',
-            'quantity'              => 'required|array',
-            'discount'              => 'nullable|array',
-            'advance'               => 'nullable|array',
-            'total'                 => 'required|array',
-            'wages_screenshot_url'  => 'required|url'
+            'wages'                 => 'required',
+            'quantity'                 => 'required',
+            'discount.*'              => 'nullable|array',
+            'advance.*'               => 'nullable|array',
+            'total.*'                 => 'required|array'
         ];
     }
 
     public function upProductsPresentErrorRule()
     {
         return[
-            'up_products'          => 'required_without:lo_products|array',
+            'up_products'          => 'required_without:lo_products|not_in:0',
             //Measure
             'cloth_long'            => 'required|string',
             'cloth_enclosure'       => 'required|string',
@@ -75,7 +74,7 @@ trait OrderErrorRuleTrait {
     public function loProductsPresentErrorRule()
     {
         return[
-            'lo_products'          => 'required_without:up_products|array',
+            'lo_products'          => 'required_without:up_products',
             //lower part
             'length'                => 'required|string',
             'around_ankle'          => 'required|string',
