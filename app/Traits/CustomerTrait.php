@@ -7,8 +7,8 @@ use App\Models\OrderManagement;
 trait CustomerTrait{
     use fileUploadDeleteTrait;
     public function maxOrderNoFixing($order_number){
-        $Order = Customer::orderBy('id',"DESC")->first();
-        if($this->force_id==1){
+        $Order = Customer::orderBy('order_number',"DESC")->first();
+        if($this->force_id==true){
             return $maxOrderNo = $order_number;
         }else{
             if(strlen($Order)>0){
@@ -37,7 +37,7 @@ trait CustomerTrait{
         $customer->name        = ucwords($this->name);
         $customer->mobile      = $this->mobile;
         $customer->address     = $this->address ?? null;
-        $customer->email       = $this->email ?? null;
+        $customer->email       = $this->email && trim($this->email)!='' ?$this->email: null;
         $customer->order_number= $this->order_number;
         $customer->courier_details = $this->courierDetailsJsonEncode();
         if ($this->photo) {
@@ -56,8 +56,9 @@ trait CustomerTrait{
         $customer->user_id     = auth()->user()->id;
         $customer->name        = ucwords($this->name);
         $customer->mobile      = $this->mobile;
+        // $customer->order_number      = $this->order_number;
         $customer->address     = $this->address ?? null;
-        $customer->email       = $this->email ?? null;
+        $customer->email       = $this->email && trim($this->email)!='' ?$this->email: null;
         if ($this->order_delivery) {
             $customer->courier_details = $this->courierDetailsJsonEncode();
         }

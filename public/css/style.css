@@ -129,3 +129,12 @@ Flonting input css
     /* opacity: .65;
     transform: scale(.85) translateY(-.5rem) translateX(.15rem) */
 }
+
+.pz-bg {
+    color: #fff;
+    background-color: #6F1E51;
+}
+
+.pz-text {
+    color: #6F1E51;
+}

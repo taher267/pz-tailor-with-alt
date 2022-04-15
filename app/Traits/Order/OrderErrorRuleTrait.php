@@ -26,10 +26,10 @@ trait OrderErrorRuleTrait {
     public function commonOrderErrorRule()
     {
         return[
-            'delivery_date'         => 'required|date|date_format:Y-m-d',
-            'order_date'            => 'nullable|date|date_format:Y-m-d|before_or_equal:delivery_date',
-            'up_products'          => 'required_without:lo_products|not_in:0',
-            'lo_products'          => 'required_without:up_products|not_in:0',
+            'delivery_date'        => 'required|date|date_format:Y-m-d',
+            'order_date'           => 'required|date|date_format:Y-m-d|before_or_equal:delivery_date',
+            'up_products'          => 'required_without:lo_products',
+            'lo_products'          => 'required_without:up_products',
             'order_sample_images.*'=>'image|mimes:jpg,jpeg,png|nullable',
             //Measure
             'cloth_body'            => 'nullable',
@@ -47,10 +47,10 @@ trait OrderErrorRuleTrait {
             'cloth_additional'      => 'nullable|string',
             'plate'                 => 'nullable',
             'pocket'                => 'nullable',
-            'up_designs_check.*'    => 'nullable|numeric',
-            'up_design_fields.*'    => 'nullable|numeric',
-            'lo_designs_check.*'    => 'nullable|numeric',
-            'lo_design_fields.*'    => 'nullable|numeric',
+            // 'up_designs_check.*'    => 'nullable',
+            // 'up_design_fields.*'    => 'nullable',
+            // 'lo_designs_check.*'    => 'nullable',
+            // 'lo_design_fields.*'    => 'nullable',
             // 'wages'                 => 'required',
             // 'quantity'                 => 'required',
             // 'discount.*'              => 'nullable|array',
@@ -66,7 +66,13 @@ trait OrderErrorRuleTrait {
             //Measure
             'cloth_long'            => 'required|string',
             'hand_long'             => 'required|string',
-            'cloth_shoulder'        => 'required|string'
+            'cloth_shoulder'        => 'required|string',
+            'upper.quantity'        => 'required|numeric',
+            'upper.wages'           => 'required|numeric',
+            'upper.discount'        => 'nullable|numeric',
+            'upper.advance'         => 'nullable|numeric',
+            'upper.wages'           => 'required|numeric',
+            'upper.total'           => 'required|numeric'
         ];
     }
 
@@ -80,6 +86,12 @@ trait OrderErrorRuleTrait {
             'thigh_loose'           => 'required|string',
             'waist'                 => 'required|string',
             'crotch'                => 'required|string',
+            'lower.quantity'        => 'required|numeric',
+            'lower.wages'           => 'required|numeric',
+            'lower.discount'        => 'nullable|numeric',
+            'lower.advance'         => 'nullable|numeric',
+            'lower.wages'           => 'required|numeric',
+            'lower.total'           => 'required|numeric'
         ];
     }
 }

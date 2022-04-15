@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Livewire\Customer;
+use Carbon\Carbon;
 use App\Models\Product;
 use Livewire\Component;
 use App\Models\Customer;
@@ -19,7 +20,7 @@ class NewOrder extends Component
     //Customer
     public $customer_id, $name, $email, $mobile, $photo;
     //Order
-    public $order_number, $delivery_date, $order_date, $force_id, $order_delivery, $force_previous_date, $weekendholiday;
+    public $order_number, $delivery_date, $order_date, $delivery_status='processing', $force_id, $order_delivery, $force_previous_date, $weekendholiday, $order_management_id;
     /**
      * Upper part
      * Panzabi
@@ -38,7 +39,7 @@ class NewOrder extends Component
      * @param waist কোমর
      * @param thigh_loose রান/উরু
      */
-    public $length, $around_ankle, $thigh_loose, $waist, $crotch,$rubber, $lower_additional;
+    public $length, $around_ankle, $thigh_loose, $waist, $crotch, $rubber, $lower_additional;
     
     /**
      * Design fields
@@ -46,7 +47,7 @@ class NewOrder extends Component
     public $up_designs_check=[], $up_design_fields=[], $lo_designs_check=[], $lo_design_fields=[], $upper_design_show, $lower_design_show, $show_design_group_heading, $wages_screenshot_url;
     
 
-    public function mount($order_number)
+    public function mount($order_number, $order_management_id=null)
     {
         $this->order_number =$order_number;
         $customer           = Customer::findOrFail($order_number);
@@ -55,28 +56,43 @@ class NewOrder extends Component
         $this->email        = $customer->email;
         $this->mobile       = $customer->mobile;
         $this->photo        = $customer->photo;
-        $this->delivery_date = date( "Y-m-d", strtotime( date( "Y-m-d")." +10 days" ));
-        $this->weekendholiday = 4;
+        if ($order_management_id) {
+            $this->order_management_id = $order_management_id;
+        }else {
+            $this->delivery_date = date( "Y-m-d", strtotime( date( "Y-m-d")." +10 days" ));
+            $this->weekendholiday = 4;
+            $this->order_date = Carbon::now()->format('Y-m-d');
+        }
         
     }
     public function updated($fields)
     {
-        
         // if (!$this->force_previous_date) {
         //     $this->validateOnly($fields,$this->forceIdWithDateErrorRule());
         // }
         $this->validateOnly($fields,$this->commonOrderErrorRule());
+        if ($this->up_products !== null && $this->lo_products ==null) {
+            $this->validateOnly($fields,[
+                'up_products'          => 'not_in:0'
+            ]);
+        }
+        if ($this->lo_products !==null && $this->up_products == null) {
+            $this->validateOnly($fields,[
+                'lo_products'          => 'not_in:0',
+            ]);
+        }
+        
         // //order delivery validation
         // if ( $this->order_delivery ) {
         //     $this->validateOnly($fields,$this->orderDeliveryErrorRule());
         // }
 
-        // if ( $this->up_products>0) {
-        //     $this->validateOnly($fields,$this->upProductsPresentErrorRule());
-        // }
-        // if ( $this->up_products>0) {
-        //     $this->validateOnly($fields,$this->loProductsPresentErrorRule());
-        // }
+        if ($this->up_products) {
+            $this->validateOnly($fields,$this->upProductsPresentErrorRule());
+        }
+        if ($this->up_products) {
+            $this->validateOnly($fields,$this->loProductsPresentErrorRule());
+        }
     }
     /**
      * Fill empty style field
@@ -97,15 +113,50 @@ class NewOrder extends Component
 
     public function addOrder()
     {
+        // $this->dispatchBrowserEvent('reset_form', ['data'=>'']);
         $this->validate($this->commonOrderErrorRule());
-        dd(array_filter($this->plate));
-        // $result  = $this->placeOrder($this->customer_id);
+        if ($this->up_products !== null && $this->lo_products ==null) {
+            $this->validate([
+                'up_products'          => 'not_in:0'
+            ]);
+        }
+        if ($this->lo_products !==null && $this->up_products == null) {
+            $this->validate([
+                'lo_products'          => 'not_in:0',
+            ]);
+        }
+        if ($this->up_products) {
+            $this->validate($this->upProductsPresentErrorRule());
+            if (count($this->up_designs_check)==0) {
+                return  $this->dispatchBrowserEvent('design_alert', ['message' => "<i class='fa-solid fa-person-dress text-info fa-2x'></i> ডিজাইন যুক্ত করুণ <i class='fa fa-exclamation-triangle text-danger'></i>",'effect'=>'warning']);
+            }
+        }
+
+        if ($this->lo_products) {
+            $this->validate($this->loProductsPresentErrorRule());
+            if (count($this->lo_designs_check)==0) {
+                return  $this->dispatchBrowserEvent('design_alert', ['message' => "<i class='fa-solid fa-person-dress text-info fa-2x'></i> ডিজাইন যুক্ত করুণ <i class='fa fa-exclamation-triangle text-danger'></i>",'effect'=>'warning']);
+            }
+        }
+        if($this->up_products){
+            $result1 = $this->designChecker($this->up_designs_check,$this->up_design_fields);
+            $this->up_design_fields=$result1;
+        }
+        
+        if($this->lo_products){
+            $result2 = $this->designChecker($this->lo_designs_check,$this->lo_design_fields);
+            $this->up_design_fields=$result2;
+        }
+        $returnAdded = $this->placeOrder($this->customer_id);
+        if ($returnAdded==='new-order-failed') {
+            return $this->dispatchBrowserEvent('design_alert', ['message' =>"<span class='d-block pt-2'>অর্ডার যুক্ত হয়নি <i class='fa fa-question text-danger'></i></span>",'effect'=>'error']);
+        }elseif ($returnAdded>0) {
+            return $this->dispatchBrowserEvent('design_alert', ['message' =>"<span class='d-block pt-2'>অর্ডার যুক্ত যুক্ত হয়েছে</span>",'effect'=>'success']);
+        }else {
+            return $this->dispatchBrowserEvent('design_alert', ['message' =>"<span class='d-block pt-2'>কিছু ভুল হচ্ছে<i class='fa-brands fa-500px'></i>00</span>",'effect'=>'error']);
+        }
     }
-    public function designsShowHideControl()
-    {
-        $this->upper_design_show=0;
-    }
-    
+
     public function groupTitleControl()
     {
         $this->dispatchBrowserEvent('groupTitleShow', ['keyname'=>""]);
@@ -116,7 +167,7 @@ class NewOrder extends Component
      */
     public function weekEndEnableAndDisable()
     {
-        // $this->dispatchBrowserEvent('force_previous_date', ['data'=>$this->force_previous_date]);
+        // $this->dispatchBrowserEvent('reset_form', ['data'=>$this->force_previous_date]);
     }
     public function add($i)
     {
@@ -126,17 +177,10 @@ class NewOrder extends Component
         }
         array_push($this->wages_inputs,$i++);
     }
-    public function remove($i)
+    
+    public function resetDesignFields($arg=null)
     {
-        // if (count($this->wages_inputs)<2) {
-        //     return;
-        // }
-        // unset($this->wages_inputs[$i]);
-        // unset($this->wages[$i]);
-        // unset($this->total[$i]);
-        // unset($this->quantity[$i]);
-        // unset($this->discount[$i]);
-        // unset($this->advance[$i]);
+        $this->designResetTrait($arg);
     }
     public function render()
     {

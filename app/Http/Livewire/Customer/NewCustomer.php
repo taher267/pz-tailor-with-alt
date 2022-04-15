@@ -3,10 +3,11 @@
 namespace App\Http\Livewire\Customer;
 
 use Livewire\Component;
+use App\Models\Customer;
 use App\Traits\CustomerTrait;
 use Livewire\WithFileUploads;
-use App\Traits\fileUploadDeleteTrait;
 use App\Traits\ErrorMessageTrait;
+use App\Traits\fileUploadDeleteTrait;
 
 class NewCustomer extends Component
 {
@@ -19,14 +20,20 @@ class NewCustomer extends Component
     public $order_delivery, $delivery_system, $courier_name, $delivery_charge, $country="bd", $city, $province, $line1, $line2, $zipcode;
     public function mount()
     {
-        // $this->reset();
+        $lastOrder = Customer::orderBy('order_number',"DESC")->first();
+        
+        if( $lastOrder== null){
+        $this->order_number =1;
+        }else{
+            $this->order_number = $lastOrder->order_number+1;
+        }
     }
     public function updated($fields)
     {
         $this->validateOnly($fields,[
             'name'              =>  'required',//|regex:/^[\pL\s\-]+$/u
             'mobile'            =>  'required|unique:customers|regex:/^01([0-9]){9}$/',
-            'order_number'      => "required|numeric|unique:customers|min:1|max:".$this->maxOrderNoFixing($this->order_number),
+            'order_number'      =>  "required|numeric|unique:customers|min:1|max:".$this->maxOrderNoFixing($this->order_number),
             'email'             =>  'email|nullable|unique:customers',
             'address'           =>  'String|nullable',
             'photo'             =>  'image|mimes:jpg,jpeg,png|nullable',
@@ -73,6 +80,9 @@ class NewCustomer extends Component
     }
     public function render()
     {
+        if (!$this->force_id) {
+            // $this->maxOrderNoFixing($this->order_number);
+        }
         $this->minMaxOrderId();
         return view('livewire.customer.new-customer')->layout('layouts.starter');
     }
