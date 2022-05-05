@@ -6,8 +6,10 @@
   @php
     $URL = config('app.url');
  @endphp
-  <title>{{ config('app.name', 'Tailors-Panzabi.com') }}</title>
-
+ {{-- "{!! config('app.name', 'Tailors-Panzabi.com')!!}" --}}
+  <title>✂@yield('title',config('app.name', 'Tailors-Panzabi.com')), পাঞ্জাবী.কম | টেইলার্স</title>
+  {{-- ✂️ --}}
+  
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="{{ mix('css/app.css') }}">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -62,6 +64,16 @@
 <!-- AdminLTE App -->
 <script src="{{$URL.'/assets/alt/dist/js/adminlte.min.js'}}"></script>
 {{-- <script src="{{$URL.'/assets/alt/dist/js/demo.js'}}"></script> --}}
+<script src="/assets/alt/plugins/sweetalert2/sweetalert2.min.js"></script>
+<script>
+  //Toastr
+  var Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+        });
+</script>
 @livewireScripts
 @stack('scripts')
 </body>

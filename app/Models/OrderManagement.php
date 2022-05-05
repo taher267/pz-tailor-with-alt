@@ -27,7 +27,9 @@ class OrderManagement extends Model
     {
         return $this->hasMany(OrderItem::class);
     }
+    static public function orderManagementStatus()
+    {
+        return['processing'=>'প্রসেসিং', 'cancled'=>'বাতিল','completed'=>'কমপ্লিট','urgent'=>'আর্জেন্ট','replaced'=>'পরিবর্তন','waiting'=>'ওয়েটিং','alter'=>'অল্টার','notyet'=>'এখনো পদক্ষেপ নেয়া হয়নি','trial'=>'ট্রায়াল','trial-after-process'=>'ট্রিয়ালের পরবর্তী প্রসেস','reclaim'=>'সংশোধন'
+        ];
+    }
 }
-
-
-// $table->enum('status', ['processing', 'cancled','completed','urgent','replaced','waiting','alter','notyet','printed','ban'])->default('processing');

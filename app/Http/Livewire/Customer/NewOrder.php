@@ -20,7 +20,7 @@ class NewOrder extends Component
     //Customer
     public $customer_id, $name, $email, $mobile, $photo;
     //Order
-    public $order_number, $delivery_date, $order_date, $delivery_status='processing', $force_id, $order_delivery, $force_previous_date, $weekendholiday, $order_management_id;
+    public $order_number, $delivery_date, $order_date, $up_status, $lo_status, $delivery_status='processing', $force_id, $order_delivery, $force_previous_date, $weekendholiday, $order_management_id;
     /**
      * Upper part
      * Panzabi
@@ -49,8 +49,13 @@ class NewOrder extends Component
 
     public function mount($order_number, $order_management_id=null)
     {
-        $this->order_number =$order_number;
-        $customer           = Customer::findOrFail($order_number);
+        $this->order_number = $order_number;
+        $customer           = Customer::where('order_number',$order_number)->first();
+        if(!$customer){
+            // return Customer::findOrFail($order_number);
+            // return redirect()->route('welcome');
+            // return view('welcome');
+        }
         $this->customer_id  = $customer->id;
         $this->name         = $customer->name;
         $this->email        = $customer->email;
@@ -67,6 +72,9 @@ class NewOrder extends Component
     }
     public function updated($fields)
     {
+        if ($this->order_management_id !=null ) {
+            $this->orderAndDeliveryDate();
+        }
         // if (!$this->force_previous_date) {
         //     $this->validateOnly($fields,$this->forceIdWithDateErrorRule());
         // }
@@ -90,7 +98,7 @@ class NewOrder extends Component
         if ($this->up_products) {
             $this->validateOnly($fields,$this->upProductsPresentErrorRule());
         }
-        if ($this->up_products) {
+        if ($this->lo_products) {
             $this->validateOnly($fields,$this->loProductsPresentErrorRule());
         }
     }
@@ -147,8 +155,9 @@ class NewOrder extends Component
             $result2 = $this->designChecker($this->lo_designs_check,$this->lo_design_fields);
             $this->up_design_fields=$result2;
         }
+        
         $returnAdded = $this->placeOrder($this->customer_id);
-        if ($returnAdded==='new-order-failed') {
+        if ($returnAdded === 'new-order-failed') {
             return $this->dispatchBrowserEvent('design_alert', ['message' =>"<span class='d-block pt-2'>অর্ডার যুক্ত হয়নি <i class='fa fa-question text-danger'></i></span>",'effect'=>'error']);
         }elseif ($returnAdded>0) {
             return $this->dispatchBrowserEvent('design_alert', ['message' =>"<span class='d-block pt-2'>অর্ডার যুক্ত যুক্ত হয়েছে</span>",'effect'=>'success']);
@@ -185,11 +194,13 @@ class NewOrder extends Component
     public function render()
     {
         $this->wagesesCalculation();
-        $upperProductsPart = Product::where('status',1)->where('type',1)->get();
-        $lowerProductsPart = Product::where('status',1)->where('type',2)->get();
-        $allproducts = Product::where('status',1)->get();
-        $desgnGroups = DesignGroup::get();
-        $designItems = DesignItem::where('status',1)->get();
-        return view('livewire.customer.new-order', compact('allproducts','upperProductsPart','lowerProductsPart', 'desgnGroups', 'designItems'))->layout('layouts.starter');
+        
+        $upperProductsPart  = Product::where('status',1)->where('type',1)->get();
+        $lowerProductsPart  = Product::where('status',1)->where('type',2)->get();
+        $allproducts        = Product::where('status',1)->get();
+        $desgnGroups        = DesignGroup::get();
+        $designItems        = DesignItem::where('status',1)->get();
+        $statuses           = OrderManagement::orderManagementStatus();
+        return view('livewire.customer.new-order', compact('allproducts','upperProductsPart','lowerProductsPart', 'desgnGroups', 'designItems', 'statuses'))->layout('layouts.starter');
     }
 }

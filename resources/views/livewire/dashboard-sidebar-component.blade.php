@@ -66,9 +66,9 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="{{route('specific.orders')}}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Flot</p>
+                  <p>Specific Orders</p>
                 </a>
               </li>
               <li class="nav-item">

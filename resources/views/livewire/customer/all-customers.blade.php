@@ -34,8 +34,8 @@
                             <td>{{$customer->mobile}}</td>
                             <td>Last order</td>
                             <td>
-                                <a href="{{route('customers.edit',$customer->id)}}"><i class="fa fa-edit"></i></a> | 
-                                <a class="btn btn-primary btn-sm" href="{{route('order.new',$customer->id)}}"><i class="fa fa-plus"></i> <i class="fa fa-cart-plus"></i></a>
+                                <a href="{{route('customers.edit',$customer->id)}}"><i class="fa fa-edit"></i></a> |
+                                <a class="btn btn-primary btn-sm" href="{{route('order.new',$customer->order_number)}}"><i class="fa fa-plus"></i> <i class="fa fa-cart-plus"></i></a>
                             </td>
                         </tr>
                     @endforeach

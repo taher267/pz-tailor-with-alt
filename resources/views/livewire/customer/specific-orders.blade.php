@@ -4,12 +4,47 @@
     display: none;
 }
     </style>
+    <div class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-8">
+              <div class="row">
+                  <div class="col-sm-6">
+                    <div class="card card-body">
+                       Lorem ipsum dolor sit amet.
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="card card-body px-0">
+                        {{Request::url()}}
+                    </div>
+                  </div>
+              </div>
+            </div><!-- /.col -->
+            <div class="col-sm-4">
+                <h2 class="m-0 text-right border-bottom py-2 italic">অর্ডার </h2>
+              <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="#"><i class="fa fa-users"></i>###</a></li>
+                <li class="breadcrumb-item active">নতুন অর্ডার </li>
+              </ol>
+            </div><!-- /.col -->
+          </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
     <div class="card">
+        <div class="col-md-6">
+            <select wire:model="order_status" class="custom-select d-block w-100" id="order_status" required>
+                @foreach ($statuses as $key=> $status)
+                    <option value="{{$key}}" class="text-capitalize">{{$status}}</option>
+                @endforeach
+                
+            </select>
+        </div>
         <div class="card-header">
             <h3 class="card-title"><i class="fa-solid fa-handshake"></i> সকল অর্ডারসমূহ</h3>
             <div class="card-tools">
-                @if (isset($orders) && $orders->count()>0)
-                {!!$orders->links()!!}
+                @if (isset($specificorders) && $specificorders->count()>0)
+                {!!$specificorders->links()!!}
                 @endif
             </div>
         </div>
@@ -27,11 +62,10 @@
             </tr>
             </thead>
             <tbody>
-                @if (isset($orders) && $orders->count()>0)
-                    @foreach ($orders as $key=> $order)
-                    {{-- @foreach ($orders->where('created_at', '>=', Carbon\Carbon::today()) as $key=> $order) --}}
-                    
+                @if (isset($specificorders) && $specificorders->count()>0)
+                    @foreach ($specificorders as $key=> $order)
                         <tr class="{{Carbon\Carbon::now()->format('Y-m-d')===$order->order_date?'pz-bg':''}}">
+                            
                             <td>{{$order->order_number}}</td>
                             <td>{{$order->delivery_date}}</td>
                             <td>
@@ -58,13 +92,24 @@
                                 
                             </td>
                             <td>{{Carbon\Carbon::parse($order->created_at)->format('Y-m-d')}}</td>
-                            <td>{{ucfirst($order->status)}}</td>
+                            <td>
+                                <div class="form-group">
+                                    {{-- <label for="exampleFormControlSelect1">Example select</label> --}}
+                                    <select class="form-control" wire:model="change_order_status.{{$order->id}}" wire:change='changeOrderStatus({{$order->id}})' id="exampleFormControlSelect1">
+                                        <option value="{{$order->status}}" class="text-capitalize">{{$statuses[$order->status]}}</option>
+                                        @foreach ($statuses as $k=> $status)
+                                            @if($k!==$order->status)
+                                                <option value="{{$k}}" class="text-capitalize">{{$status}}</option>
+                                            @endif
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </td>
                             <td> 
                                 <a class="btn btn-success btn-sm" href="{{route('order.new.additem',[$order->order_number, $order->id])}}"><i class="fa fa-plus"></i> <i class="fa fa-cart-plus"></i> New Item</a>|
-                                <a href="{{route('customer.order.items',[$order->order_number, $order->id])}}"><i class="fa fa-eye"></i></a>
+                                {{-- <a href="{{route('customers.edit',$order->id)}}"><i class="fa fa-edit"></i></a> --}}
                             </td>
                         </tr>
-                   
                     @endforeach
                 @endif
             </tbody>
@@ -72,3 +117,9 @@
         </div>
         </div>
 </div>
+@push('scripts')
+    <script>
+        history.pushState({}, 'All JavaScript Tutorials', '{{Request::url()}}');
+    </script>
+    
+@endpush

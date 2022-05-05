@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Title</title>
+        <style>
+            html, body, h1, p, div 
+            {
+                font-size: 16px;
+                line-height: 22px;
+                margin: 0;
+                padding: 0;    
+            }
+
+            ul
+            {
+                font-size: 16px;
+                line-height: 22px;
+            }
+
+            h1
+            {
+                font-size: 18px;
+                line-height: 22px;
+                margin: 0;
+                padding: 0;    
+            }        
+
+            p
+            {
+                font-size: 12px;
+                line-height: 16px;
+                margin: 0;
+                padding: 0;    
+            }
+
+
+
+            body
+            {
+                padding: 6px;
+            }
+
+                 
+
+          
+            /* using styles to hide/show printing content */
+
+            .pip-do-not-print
+            {
+                display: none !important;
+            }
+           
+            .pip-print-root
+            {
+                /*padding: 1em;*/
+                /*border: 6px solid red;*/
+                /*margin: 1em;*/
+            }
+
+        </style>
+        <style>
+            @import url("https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400&display=swap");
+
+            * {
+                margin: 0;
+                padding: 0;
+            }
+
+            table>tbody tr td {
+                width: 50px;
+                height: 25px;
+                font-size: 8px;
+                text-align: center;
+                border: 1px solid #ddd;
+                font-family: "Hind Siliguri", sans-serif;
+            }
+
+            .order-card-wrapper {
+                display: flex;
+                font-family: "Hind Siliguri", sans-serif;
+            }
+
+            .left-part {
+                display: flex;
+            }
+
+            .left-part .name-part {
+                font-size: 14px;
+                text-align: right;
+                margin-right: 5px;
+                font-family: "Hind Siliguri", sans-serif;
+            }
+
+            .checked-part p input {
+                height: 19px;
+                font-family: "Hind Siliguri", sans-serif;
+            }
+
+            tr.empty-tr {
+                width: 100%;
+                height: 26px;
+                font-family: "Hind Siliguri", sans-serif;
+            }
+
+            .right-part {
+                margin-left: 10px;
+                font-family: "Hind Siliguri", sans-serif;
+            }
+        </style>
+	</head>
+	<body>
+        <a class="click-to-print print-area-1">Click to Print 'A' sections only</a>
+        <!-- <button class="click-to-print print-area-1">Click to Print 'A' sections only</button> -->
+        <div class="measurementPrint-1">
+            <div class="order-card-wrapper">
+    <div class="left-part">
+        <div class="name-part">
+            <p><span>পাঞ্জাবী</span></p>
+            <p><span>শর্ট পাঞ্জাবি</span></p>
+            <p><span>একছাটা</span></p>
+            <p><span>কাবলী</span></p>
+            <p><span>গোলজামা</span></p>
+            <p><span>ফতুয়া</span></p>
+            <p><span>এরাবিয়ান</span></p>
+            <p><span>একছাটা জুব্বা</span></p>
+            <p><span>সেরোয়ানী</span></p>
+            <p><span>কটি</span></p>
+        </div>
+        <div class="checked-part">
+            <p><input type="checkbox"></p>
+            <p><span></span><input type="checkbox"></p>
+            <p><input type="checkbox"></p>
+            <p><input type="checkbox"></p>
+            <p><input type="checkbox"></p>
+            <p><input type="checkbox"></p>
+            <p><input type="checkbox"></p>
+            <p><input type="checkbox"></p>
+            <p><input type="checkbox"></p>
+            <p><input type="checkbox"></p>
+        </div>
+    </div>
+    <div class="right-part">
+        <table>
+            <tbody>
+                <tr class="empty-tr"></tr>
+                <!-- <tr>
+                    <td>লম্বা</td>
+                    <td>বডি</td>
+                    <td>পুট</td>
+                    <td>হাতা</td>
+                    <td>কলার</td>
+                    <td>হাতার মুহুরী</td>
+                    <td>বুতাম</td>
+                    <td>হাতায় পেস্টিং</td>
+                </tr> -->
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+        </div>
+
+        <div class="content-B">
+            <h1>content B</h1>
+            <p>Bla bla bla</p>
+            
+            <div class="content-C">
+                <h1>content C inside B</h1>
+                <p>Bla bla bla</p>
+            </div>
+            
+            <div class="content-D">
+                <h1>content D inside B</h1>
+                <p>Bla bla bla</p>
+            </div>
+        </div>
+                
+        <div class="content-B">
+            AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        </div>
+
+        <div class="content-C">
+            AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        </div>
+
+        <div class="content-D">
+            <h1>more content B</h1>
+            <p>Bla bla bla</p>
+            <div class="content-D">
+            AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        </div>
+            <div class="content-C">
+                <h1>more content C inside B</h1>
+                <p>Bla bla bla</p>
+            </div>
+            
+            <div class="content-D">
+                <h1>more content D inside B</h1>
+                <p>Bla bla bla</p>
+            </div>
+        </div>
+                
+       <!--  <div class="print-buttons">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+            proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            <button class="click-to-print print-area-C">Click to Print 'C' sections only (nested inside 'B' sections...)</button>
+                
+            <button class="click-to-print print-area-C print-area-B" title="HINT: this will result in each entire 'B' chunk being printed; the print-in-page plugin does not mind you effectively specified the C sections _twice_">Click to Print 'C' plus 'B' sections == all 'B' sections</button>
+                
+            <button class="click-to-print print-area-A print-area-D">Click to Print 'A' + 'D' sections</button>
+        </div> -->
+
+
+        <!-- Check the console -->
+
+        <script data-main="main" src="require.js"></script>
+	</body>
+</html>

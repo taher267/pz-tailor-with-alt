@@ -23,7 +23,8 @@ return new class extends Migration
             $table->json('item_summary')->nullable();
             $table->json('measurement')->nullable();
             $table->json('designs')->nullable();
-            $table->enum('status', ['processing', 'cancled','completed','urgent','replaced','waiting','alter','notyet','trial','trial-after-process'])->default('processing');
+            $table->json('ref')->nullable();
+            $table->enum('status', ['processing', 'cancled','completed','urgent','replaced','waiting','alter','notyet','trial','trial-after-process','reclaim'])->default('processing');
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('order_management_id')->references('id')->on('order_management')->onDelete('cascade');

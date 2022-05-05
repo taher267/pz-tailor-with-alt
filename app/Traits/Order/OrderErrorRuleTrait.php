@@ -22,12 +22,16 @@ trait OrderErrorRuleTrait {
             'line1'             =>  'required',
         ];
     }
-
-    public function commonOrderErrorRule()
+    public function orderAndDeliveryDate()
     {
         return[
             'delivery_date'        => 'required|date|date_format:Y-m-d',
             'order_date'           => 'required|date|date_format:Y-m-d|before_or_equal:delivery_date',
+        ];
+    }
+    public function commonOrderErrorRule()
+    {
+        return[
             'up_products'          => 'required_without:lo_products',
             'lo_products'          => 'required_without:up_products',
             'order_sample_images.*'=>'image|mimes:jpg,jpeg,png|nullable',
@@ -63,11 +67,10 @@ trait OrderErrorRuleTrait {
     {
         return[
             'up_products'          => 'required_without:lo_products|not_in:0',
-            //Measure
             'cloth_long'            => 'required|string',
             'hand_long'             => 'required|string',
             'cloth_shoulder'        => 'required|string',
-            'upper.quantity'        => 'required|numeric',
+            'upper.quantity'        => 'required|numeric|gt:0',
             'upper.wages'           => 'required|numeric',
             'upper.discount'        => 'nullable|numeric',
             'upper.advance'         => 'nullable|numeric',
@@ -86,12 +89,12 @@ trait OrderErrorRuleTrait {
             'thigh_loose'           => 'required|string',
             'waist'                 => 'required|string',
             'crotch'                => 'required|string',
-            'lower.quantity'        => 'required|numeric',
+            'lower.quantity'        => 'required|numeric|gt:0',
             'lower.wages'           => 'required|numeric',
             'lower.discount'        => 'nullable|numeric',
             'lower.advance'         => 'nullable|numeric',
             'lower.wages'           => 'required|numeric',
-            'lower.total'           => 'required|numeric'
+            'lower.total'           => 'required|numeric|gt:0'
         ];
     }
 }

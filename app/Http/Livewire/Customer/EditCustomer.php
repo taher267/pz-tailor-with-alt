@@ -18,7 +18,8 @@ class EditCustomer extends Component
 
     public function mount($id)
     {
-        $customer               = Customer::findOrFail($id);
+        $customer               = Customer::where('id',$id)->firstOrFail();
+        //   if (!$customer) abort(404);
         $this->order_number     = $customer->order_number;
         $this->name             = $customer->name;
         $this->mobile           = $customer->mobile;

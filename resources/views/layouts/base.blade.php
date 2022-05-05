@@ -49,7 +49,7 @@
       </div>
       <div class="tab-loading">
         <div>
-          <h2 class="display-4">Tab is loading <i class="fa fa-sync fa-spin"></i></h2>
+          <h2 class="display-4">Loading <i class="fa fa-sync fa-spin"></i></h2>
         </div>
       </div>
     </div>

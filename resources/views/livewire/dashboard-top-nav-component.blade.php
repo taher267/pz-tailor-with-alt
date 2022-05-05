@@ -132,7 +132,7 @@
         </a>
       </li>
       <li class="nav-item">
-       <a class="nav-link" href="#" onclick="alert('Logout'); document.getElementById('form_logout_control').submit(); event.stopImmediatePropagation();">Logout <i class="fa fa-sign-out"></i> </a>
+       <a class="nav-link" href="#" onclick="return confirm('Are you sure to logout?')? document.getElementById('form_logout_control').submit():event.stopImmediatePropagation();">Logout <i class="fa fa-sign-out"></i> </a>
       </li>
     </ul>
     <form id="form_logout_control" action="{{route('logout')}}" method="POST">
