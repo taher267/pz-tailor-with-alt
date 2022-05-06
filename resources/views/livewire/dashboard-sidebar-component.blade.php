@@ -233,47 +233,29 @@
               </li>
             </ul>
           </li>
-          <li class="nav-header">EXAMPLES</li>
+          <li class="nav-header"><i class="fa-solid fa-user-gear"></i> ADMIN</li>
           <li class="nav-item">
-            <a href="#pages/calendar.html" class="nav-link">
-              <i class="nav-icon far fa-calendar-alt"></i>
-              <p>
-                Calendar
-                <span class="badge badge-info right">2</span>
-              </p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="#pages/gallery.html" class="nav-link">
-              <i class="nav-icon far fa-image"></i>
-              <p>
-                Gallery
-              </p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="##" class="nav-link">
-              <i class="nav-icon far fa-envelope"></i>
-              <p>
-                Mailbox
+            <a href="#" class="nav-link">
+              <i class="fa-brands fa-product-hunt"></i>
+              <p>Product(পণ্য)
                 <i class="fas fa-angle-left right"></i>
               </p>
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="#pages/mailbox/mailbox.html" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Inbox</p>
+                <a href="{{route('admin.products')}}" class="nav-link">
+                  <i class="fa-brands fa-product-hunt"></i>
+                  <p>All Products</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="#pages/mailbox/compose.html" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Compose</p>
+                <a href="#" class="nav-link">
+                  <i class="far fa-plus nav-icon"></i>
+                  <p>Add Product</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="#pages/mailbox/read-mail.html" class="nav-link">
+                <a href="#" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Read</p>
                 </a>
@@ -281,7 +263,7 @@
             </ul>
           </li>
           <li class="nav-item">
-            <a href="##" class="nav-link">
+            <a href="#" class="nav-link">
               <i class="nav-icon fas fa-book"></i>
               <p>
                 Pages

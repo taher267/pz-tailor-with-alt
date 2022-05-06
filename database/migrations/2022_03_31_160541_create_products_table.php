@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->string('type');
             $table->boolean('status')->default(true);
-            $table->decimal('price',5,2)->nullable();
+            $table->decimal('wages',5,2)->nullable();
             $table->longText('option')->nullable();
         });
     }

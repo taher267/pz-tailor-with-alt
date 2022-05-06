@@ -709,10 +709,7 @@
             @this.set('delivery_date', s.target.value);
         });
         
-        //Force previous date
-        window.addEventListener('force_previous_date', event => {
-
-        });
+   
         $("#forcePreviousDate").on("change",function () {
             if ($(this).is(":checked")) {
                 flickerfun('');

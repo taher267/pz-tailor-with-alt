@@ -26,6 +26,7 @@ Route::middleware(['auth:sanctum',config('jetstream.auth_session'),'verified'])-
 //Admin Routes
 Route::group(['prefix'=>'admin','middleware'=>['isAdmin','auth:sanctum',config('jetstream.auth_session'),'verified']],function () {
     Route::get('/dashboard', App\Http\Livewire\Admin\AdminDashboardComponent::class)->name('admin.dashboard');
+    Route::get('/products', App\Http\Livewire\Admin\AdminProducts::class)->name('admin.products');
 });
 
 // //Manage Routes
