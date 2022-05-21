@@ -73,17 +73,20 @@
                                 @error('delivery_date') <div class="invalid-feedback">{!!$message!!}</div>
                                 @else
                                 
-                                @if ($delivery_date &&  $weekendholiday && $weekendholiday==Carbon\Carbon::createFromFormat('Y-m-d',$delivery_date)->dayOfWeek)
+                                @if ($delivery_date &&  $weekendholiday && ($delivery_date===$weekendholiday))
+                                @php
+                                    $selectedDay = Carbon\Carbon::createFromFormat('Y-m-d',$delivery_date)->dayOfWeek;
+                                @endphp
                                 <p class="mt-3" style="color: #2D88F3">
                                     ({{$delivery_date}}),
                                     নির্বাচিত তারিখটি
-                                    @if ($weekendholiday=='6') শনিবার
-                                    @elseif($weekendholiday=='0')রবিবার
-                                    @elseif ($weekendholiday=='1') সোমবার
-                                    @elseif ($weekendholiday=='2') মঙ্গলবার
-                                    @elseif ($weekendholiday=='3')বুধবার
-                                    @elseif ($weekendholiday=='4') বৃহস্পতিবার
-                                    @elseif($weekendholiday=='5') শুক্রবার
+                                    @if ($selectedDay=='6') শনিবার
+                                    @elseif($selectedDay=='0')রবিবার
+                                    @elseif ($selectedDay=='1') সোমবার
+                                    @elseif ($selectedDay=='2') মঙ্গলবার
+                                    @elseif ($selectedDay=='3')বুধবার
+                                    @elseif ($selectedDay=='4') বৃহস্পতিবার
+                                    @elseif($selectedDay=='5') শুক্রবার
                                     @endif
                                     প্রতিষ্ঠানের সাপ্তাহিক ছুটির দিন!
                                 </p>
@@ -343,18 +346,14 @@
                                             <label class="custom-control-label" for="upper-design-show"><h5>ডিজাইন</h5></label>
                                         </div>
                                         <div class="upper-designs-cards-wrapper">
-                                            @if ($upper_design_show && $designItems->count()>0 && $desgnGroups->count()>0)
+                                            @if ($upper_design_show && $UpDesignItems->count()>0 && $desgnGroups->count()>0)
                                                 @foreach ($desgnGroups as $group)
+                                                @if ($UpDesignItems->where('type', $group->slug)->count()>0)
                                                     <div class="card card-body fz-13 single-design-group">
                                                         <h5>{{$group->name}}</h5>
                                                         <div class="row">
-                                                            @foreach ($designItems->where('type', $group->slug) as $up_design)
-                                                                @php
-                                                                    $apply_on_obj_upper = json_decode($up_design->apply_on);
-                                                                    // $isDesigb = json_encode([$up_products=>1], JSON_UNESCAPED_UNICODE);
-                                                                    $isDesign = "$up_products";
-                                                                @endphp
-                                                                @if (isset($apply_on_obj_upper->$isDesign) && $apply_on_obj_upper->$isDesign)
+                                                            @endif
+                                                             @foreach ($UpDesignItems->where('type', $group->slug) as $up_design)
                                                                 <div class="col-lg-2 col-sm-6 single_design_item design_bg sarwani" style="background:url('')">
                                                                     <div class="custom-control custom-checkbox mb-1 d-inline-block">
                                                                         <input type="checkbox" wire:model="up_designs_check.{{$up_design->id}}"
@@ -370,10 +369,12 @@
                                                                             class="form-control" value="{{$up_design->id}}"></textarea>
                                                                     </div>
                                                                 </div>
-                                                                @endif
-                                                            @endforeach
+                                                            @endforeach 
+                                                            @if ($UpDesignItems->where('type', $group->slug)->count()>0)
+                                                        
+                                                            </div>
                                                         </div>
-                                                    </div>
+                                                            @endif
                                                 @endforeach
                                             @endif
                                         </div>
@@ -549,38 +550,34 @@
                                                 <label class="custom-control-label" for="lower-design-show"><h5>ডিজাইন</h5></label>
                                             </div>
                                             <div class="lower-designs-cards-wrapper">
-                                                @if ($lower_design_show && $designItems->count()>0 && $desgnGroups->count()>0)
-                                                    @foreach ($desgnGroups as $group)
-                                                        <div class="card card-body fz-13 single-design-group">
+                                                @if ($lower_design_show && $LoDesignItems->count()>0 && $desgnGroups->count()>0)
+                                                    @foreach ($desgnGroups as $group)                                                    
+                                                    @if ($LoDesignItems->where('type', $group->slug)->count()>0)
+                                                    <div class="card card-body fz-13 single-design-group">
                                                         <h5>{{$group->name}}</h5>
-                                                            <div class="row">
-                                                        @foreach ($designItems->where('type', $group->slug) as $lo_design)
-                                                            @php
-                                                                $apply_on_obj_lower = json_decode($lo_design->apply_on);                                                                    
-                                                                $demo ="পায়জামা";
-                                                            @endphp
-                                                            @if (isset($apply_on_obj_lower->$lo_products) && $apply_on_obj_lower->$lo_products)
-                                                            <h3>{{gettype($lo_design_fields)}}</h3>
-                                                                <div class="col-lg-2 col-sm-6 single_design_item design_bg sarwani" style="background:url()">
-                                                                    <div class="custom-control custom-checkbox mb-1 d-inline-block">
-                                                                        <input type="checkbox" wire:model="lo_designs_check.{{$lo_design->id}}"
-                                                                            wire:change="lowerFillEmptyStyleField({{$lo_design->id}})"
-                                                                            value="{{ $lo_design->id }}"
-                                                                            id="style_{{$lo_design->id}}" @if( in_array( $lo_design->id, array_keys($lo_design_fields)) && $lo_design_fields[$lo_design->id] !='' &&  in_array( $lo_design->id, array_keys(array_filter($lo_designs_check)))==false ) class="custom-control-input is-invalid" required @else class="custom-control-input" @endif>
-                                                                        <label class="custom-control-label"
-                                                                            for="style_{{$lo_design->id}}">{{$lo_design->name}}</label>
-                                                                                <div class="invalid-feedback"> <i class="fa fa-check" style="color:#34E3A4"></i> টিক দিন!</div>
-                                                                        @error("lo_designs_check.$lo_design->id") <div class="text-danger">
-                                                                            {!!$message!!}</div> @enderror
-                                                                        <textarea rows="1" wire:model="lo_design_fields.{{ $lo_design->id }}" rows="1"
-                                                                            class="form-control" value="{{$lo_design->id}}"></textarea>
-                                                                    </div>
-                                                                </div>
+                                                        <div class="row">
                                                             @endif
-                                                        @endforeach
-                                                        <!--Card Bottom Start-->
-                                                    </div></div>
-                                                    <!--Card Bottom end-->
+                                                                @foreach ($LoDesignItems->where('type', $group->slug) as $lo_design)
+                                                                        <div class="col-lg-2 col-sm-6 single_design_item design_bg sarwani" style="background:url()">
+                                                                            <div class="custom-control custom-checkbox mb-1 d-inline-block">
+                                                                                <input type="checkbox" wire:model="lo_designs_check.{{$lo_design->id}}"
+                                                                                    wire:change="lowerFillEmptyStyleField({{$lo_design->id}})"
+                                                                                    value="{{ $lo_design->id }}"
+                                                                                    id="style_{{$lo_design->id}}" @if( in_array( $lo_design->id, array_keys($lo_design_fields)) && $lo_design_fields[$lo_design->id] !='' &&  in_array( $lo_design->id, array_keys(array_filter($lo_designs_check)))==false ) class="custom-control-input is-invalid" required @else class="custom-control-input" @endif>
+                                                                                <label class="custom-control-label"
+                                                                                    for="style_{{$lo_design->id}}">{{$lo_design->name}}</label>
+                                                                                        <div class="invalid-feedback"> <i class="fa fa-check" style="color:#34E3A4"></i> টিক দিন!</div>
+                                                                                @error("lo_designs_check.$lo_design->id") <div class="text-danger">
+                                                                                    {!!$message!!}</div> @enderror
+                                                                                <textarea rows="1" wire:model="lo_design_fields.{{ $lo_design->id }}" rows="1"
+                                                                                    class="form-control" value="{{$lo_design->id}}"></textarea>
+                                                                            </div>
+                                                                        </div>
+                                                                @endforeach <!--Card Bottom Start-->
+                                                                    @if ($LoDesignItems->where('type', $group->slug)->count()>0)
+                                                                    </div>
+                                                                </div> <!--Card Bottom end-->
+                                                            @endif
                                                     @endforeach
                                                     @else @if ($lower_design_show)
                                                             <h5 class="text-muted text-center">দুঃখিত কোন ডিজাইন নেই <i class="fa fa-exclamation-circle text-warning"></i></h5>
@@ -694,7 +691,7 @@
             <button type="submit" class="btn btn-primary"> <i class="fa fa-cart-plus" aria-hidden="true"></i> Place</button>
         </form>
         </div>   
-    </div>    
+    </div>
 </div>
 
 @push('scripts')
@@ -717,18 +714,32 @@
                 flickerfun('today');
             }
         });        
-        
+        function disabledDate(date) {
+            const d = new Date("{{$weekendholiday}}");
+            return (date.getDay()===d.getDay());
+        }
+        // window.addEventListener('date_disabled_data', event => {
+        //     if (!countPush) {
+        //         countPush++;
+        //         Object.values(event.detail.data).forEach(val => {
+        //             console.log(val);
+        //     });
+        //     }
+            
+        // });
         function flickerfun(parms=null) {
             $("#delivery_date").flatpickr({
             dateFormat:"Y-m-d",
             defaultDate: "{{$delivery_date}}",
             minDate:parms,
-            disable: [
-                function(date) {
-                if("{{$weekendholiday}}"!=-1 && "{{$weekendholiday}}"<7) return (date.getDay()=="{{$weekendholiday}}");
-                }
-            ],
-        });
+            disable:[
+                function (date) {
+                    const d = new Date("{{$weekendholiday}}");
+                    return (date.getDay()===d.getDay());
+                },
+            ].concat(`{{$othersHoliday}}`.split(',')),
+        }
+        );
         }
         flickerfun('today');
        //Toastr
@@ -755,8 +766,10 @@
         window.addEventListener('reset_form', event => {
             document.getElementById("new-order").reset();
         });
-
+        // const arr = `$othersHoliday`
+        // console.log(typeof arr);
         });//end document.ready
+       
     </script>
 
 @endpush

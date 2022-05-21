@@ -13,7 +13,6 @@
               <div class="row">
                   <div class="col-sm-6">
                     <div class="card card-body">
-                       
                     </div>
                   </div>
                   <div class="col-sm-6">
@@ -35,7 +34,7 @@
         @endforeach
       @endif
         <div class="container-fluid fz-13">
-          <form class="form-horizontal" id="new-order" wire:submit.prevent='updateOrderItem'>
+          <form class="form-horizontal" id="new-order" wire:submit.prevent="updateOrderItem('{{url()->previous()}}')">
               {{-- Step 2 --}}
               {{-- .measurement, desing and calculation    --}}
               <div class="measurement-design-and-wages-calculation">
@@ -56,7 +55,6 @@
                                         <div class="@error('up_products')bg-warning @enderror">
                                             <select wire:model="up_products" wire:change="resetDesignFields('upper')" class="custom-select d-block w-100 @error('up_products')is-invalid @enderror"
                                                 id="up_products" required>
-                                                <option value="0">নির্বচন করুনঃ</option>
                                                 @foreach ($upperProductsPart as $upProduct)
                                                 <option>{{$upProduct->name}}</option>
                                                 @endforeach
@@ -89,9 +87,18 @@
                                             <div class="upper-measurement">
                                                 <div class="row">
                                                     <div class="col-lg-2 mb-3">
-                                                        <label for="clothlong">@error('cloth_long')<span class="text-danger">পোশাকের লম্বা {!!$message!!}</span> @else <span class="{{$cloth_long==''?'text-danger':''}}">লম্বা<sup class="fz-14">*</sup></span> @enderror</label>
-                                                        <input wire:model.debounce.500ms="cloth_long" type="text" class="form-control @error('cloth_long')is-invalid @enderror"
-                                                            id="clothlong" placeholder="লম্বা" required>
+                                                        <div class="row">
+                                                            <div class="col-lg-12 mb-3">
+                                                                <label for="clothlong">@error('cloth_long')<span class="text-danger">পোশাকের লম্বা {!!$message!!}</span> @else <span class="{{$cloth_long==''?'text-danger':''}}">লম্বা<sup class="fz-14">*</sup></span> @enderror</label>
+                                                                <input wire:model.debounce.500ms="cloth_long" type="text" class="form-control @error('cloth_long')is-invalid @enderror"
+                                                                    id="clothlong" placeholder="লম্বা" required>
+                                                            </div>
+                                                            <div class="col-lg-12 mb-3">
+                                                                <label for="platelength">প্লেটের লম্বা</label>
+                                                                <input wire:model.debounce.500ms="plate_length" type="text" class="form-control @error('plate_length')is-invalid @enderror"
+                                                                    id="platelength" placeholder="প্লেটের লম্বা">
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                     {{-- Body part Start --}}
                                                     <div class="col-lg-3 col-md-6 mb-3">

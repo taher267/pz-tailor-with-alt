@@ -7,7 +7,13 @@
               <div class="row">
                   <div class="col-sm-6">
                     <div class="card card-body">
-                       Lorem ipsum dolor sit amet.
+                      @if ($errors->any())
+                          <ol>
+                              @foreach ($errors->all() as $e)
+                              <li class="text-danger">{!!$e!!}</li>
+                              @endforeach
+                          </ol>
+                      @endif
                     </div>
                   </div>
                   <div class="col-sm-6">
@@ -47,7 +53,6 @@
                                   <div class="col-md-6">
                                       <select wire:model="lo_products" wire:change="resetDesignFields('lower')" class="custom-select d-block w-100 @error('lo_products')is-invalid @enderror"
                                               id="up_products" required>
-                                              <option value="0">নির্বচন করুনঃ</option>
                                               @foreach ($lowerProductsPart as $loProduct)
                                               <option>{{$loProduct->name}}</option>
                                               @endforeach
@@ -142,26 +147,38 @@
                                                           <div class="row">
                                                       @foreach ($designItems->where('type', $group->slug) as $lo_design)
                                                           @php
-                                                              $apply_on_obj_lower = json_decode($lo_design->apply_on);                                                                    
-                                                              $demo ="পায়জামা";
+                                                              $apply_on_obj_lower = json_decode($lo_design->apply_on);  
                                                           @endphp
-                                                          @if (isset($apply_on_obj_lower->$lo_products) && $apply_on_obj_lower->$lo_products)
+                                                          {{-- @if (isset($apply_on_obj_lower->$lo_products) && $apply_on_obj_lower->$lo_products)
                                                               <div class="col-lg-2 col-sm-6 single_design_item design_bg sarwani" style="background:url()">
                                                                   <div class="custom-control custom-checkbox mb-1 d-inline-block">
                                                                       <input type="checkbox" wire:model="lo_designs_check.{{$lo_design->id}}"
                                                                           wire:change="lowerFillEmptyStyleField({{$lo_design->id}})"
                                                                           value="{{ $lo_design->id }}"
-                                                                          id="style_{{$lo_design->id}}" @if( in_array( $lo_design->id, array_keys($lo_design_fields)) && $lo_design_fields[$lo_design->id] !='' &&  in_array( $lo_design->id, array_keys(array_filter($lo_designs_check)))==false ) class="custom-control-input is-invalid" required @else class="custom-control-input" @endif>
+                                                                          id="style_{{$lo_design->id}}" @if( gettype($lo_designs_check)==='array' && in_array( $lo_design->id, array_keys($lo_design_fields)) && $lo_design_fields[$lo_design->id] !='' &&  in_array( $lo_design->id, array_keys(array_filter($lo_designs_check)))==false ) class="custom-control-input is-invalid" required @else class="custom-control-input" @endif>
                                                                       <label class="custom-control-label"
                                                                           for="style_{{$lo_design->id}}">{{$lo_design->name}}</label>
                                                                               <div class="invalid-feedback"> <i class="fa fa-check" style="color:#34E3A4"></i> টিক দিন!</div>
-                                                                      @error("lo_designs_check.$lo_design->id") <div class="text-danger">
-                                                                          {!!$message!!}</div> @enderror
                                                                       <textarea rows="1" wire:model="lo_design_fields.{{ $lo_design->id }}" rows="1"
                                                                           class="form-control" value="{{$lo_design->id}}"></textarea>
                                                                   </div>
                                                               </div>
-                                                          @endif
+                                                          @endif --}}
+                                                          @if (isset($apply_on_obj_lower->$lo_products) && $apply_on_obj_lower->$lo_products)
+                                                          <div class="col-lg-2 col-sm-6 single_design_item design_bg sarwani" style="background:url()">
+                                                              <div class="custom-control custom-checkbox mb-1 d-inline-block">
+                                                                  <input type="checkbox" wire:model="lo_designs_check.{{$lo_design->id}}"
+                                                                      wire:change="lowerFillEmptyStyleField({{$lo_design->id}})"
+                                                                      value="{{ $lo_design->id }}"
+                                                                      id="style_{{$lo_design->id}}" class="custom-control-input @error("lo_designs_check.$lo_design->id")is-invalid @enderror" @error("lo_designs_check.$lo_design->id") required @enderror>
+                                                                  <label class="custom-control-label"
+                                                                      for="style_{{$lo_design->id}}">{{$lo_design->name}}</label>
+                                                                          <div class="invalid-feedback"> <i class="fa fa-check" style="color:#34E3A4"></i> টিক দিন!</div>
+                                                                  <textarea rows="1" wire:model="lo_design_fields.{{ $lo_design->id }}" rows="1"
+                                                                      class="form-control"></textarea>
+                                                              </div>
+                                                          </div>
+                                                      @endif
                                                       @endforeach
                                                       <!--Card Bottom Start-->
                                                   </div></div>

@@ -1,8 +1,15 @@
 <?php
 namespace App\Traits\Order;
+use App\Models\Setting;
 use App\Models\OrderItem;
 use App\Models\OrderManagement;
-
+/***
+ * PROBLEM ON up and lo product status
+ * 
+ * 
+ * 
+ * 
+ */
 trait OrderTrait {
     public function maxOrderNoFixing($order_number){
         $Order = OrderManagement::orderBy('id',"DESC")->first();
@@ -31,7 +38,7 @@ trait OrderTrait {
     public function placeOrder($customer_id)
     {
         $subtotal = ($this->up_products && $this->up_products && isset($this->upper['total']) && $this->upper['total']!=''?(int)$this->upper['total']:0) + ($this->lo_products && $this->lo_products && isset($this->lower['total']) && $this->lower['total']!=''?(int)$this->lower['total']:0);
-
+        // dd($subtotal);
         if($this->order_management_id){
             $increaseOrder = OrderManagement::find($this->order_management_id);
             $increaseOrder->wageses = json_encode(['subtotal'=>json_decode($increaseOrder->wageses)->subtotal + $subtotal]);
@@ -45,7 +52,7 @@ trait OrderTrait {
             $order->order_date      = $this->order_date;
             $order->delivery_date   = $this->delivery_date;
             $order->order_summary   = $this->orderSummary();
-            $order->wageses         = json_encode(['subtotal'=>$subtotal]);
+            $order->wageses         = json_encode(['subtotal'=>$subtotal], JSON_UNESCAPED_UNICODE);
             if ($this->up_status && $this->up_status!=='processing' && $this->up_status!=='cancled') {
                 $order->status          = $this->up_status;
             }elseif ( $this->lo_status && $this->lo_status!=='processing' && $this->lo_status!=='cancled' ) {
@@ -105,8 +112,8 @@ trait OrderTrait {
     // {
         
     //     $order = OrderManagement::find($this->order_management_id);
-    //     $upper=json_decode($order->order_summary)->upper;
-    //     $lower=json_decode($order->order_summary)->lower;
+    //     $upper=json_decode($order->order_summary,JSON_UNESCAPED_UNICODE)->upper;
+    //     $lower=json_decode($order->order_summary, JSON_UNESCAPED_UNICODE)->lower;
 
     //     if (isset($this->up_products)&& $this->up_products && $this->up_products) {
     //         $upper = $upper + (int)$this->upper['quantity'];
@@ -118,7 +125,7 @@ trait OrderTrait {
     //     return json_encode([
     //         'upper'=> $upper,
     //         'lower'=> $lower,
-    //     ]);
+    //     ],JSON_UNESCAPED_UNICODE);
     // }
     /**
      * অর্ডার আইটেম যুক্তকরা 
@@ -126,6 +133,7 @@ trait OrderTrait {
     public function placeOrderItem($order_management_id, $update=null, $added = 0)
     {
         
+               //JSON_UNESCAPED_UNICODE
         if (isset($this->up_products) && $this->up_products && $this->up_products) {
             if ($update) {
                 $order_item = OrderItem::find($update);
@@ -137,11 +145,13 @@ trait OrderTrait {
             $order_item->order_number           = $this->order_number;
             $order_item->order_management_id    = $order_management_id;
             $order_item->type                   = 'upper';
-            $order_item->item_summary           = json_encode(['products'=>$this->up_products, 'quantity'=>(int)$this->upper['quantity'], 'wages'=>$this->upperWagesJsonEncode()]);
+            $order_item->item_summary           = json_encode(['products'=>$this->up_products, 'quantity'=>(int)$this->upper['quantity'], 'wages'=>$this->upperWagesJsonEncode()], JSON_UNESCAPED_UNICODE);
+            // dd($order_item->item_summary);
             $order_item->measurement            = $this->upperMeasurementJsonEncode('encode');
+
             $order_item->designs                = $this->upperDesignsJsonEncode('encode');
             if ($this->up_status && $this->up_status) {
-                $order_item->status                 = $this->up_status;
+                $order_item->itemGroup->status  = $this->up_status;
             }
             
             if ($order_item->save()) {
@@ -155,11 +165,11 @@ trait OrderTrait {
         if ( isset($this->lo_products ) && $this->lo_products && $this->lo_products) {
             if ($update) {
                 $order_item = OrderItem::find($update);
-                $this->changeOrderItemStatusWithOrderManagement($update, $this->lo_products);
+                $this->changeOrderItemStatusWithOrderManagement($update, $this->lo_status);
                 // $itGroup = $order_item->itemGroup;
                 // $itGroup->order_summary = json_encode([
                 //     'upper'=>0,
-                //     'lower'=> json_decode($order_item->itemGroup->order_summary)->lower+$this->lower['quantity']-$this->prev_qty
+                //     'lower'=> json_decode($order_item->itemGroup->order_summary, JSON_UNESCAPED_UNICODE)->lower+$this->lower['quantity']-$this->prev_qty
                 // ]);
                 // $itGroup->save();
 
@@ -170,11 +180,11 @@ trait OrderTrait {
                 $order_item->order_number           = $this->order_number;
                 $order_item->type                   = 'lower';            
             }            
-            $order_item->item_summary           = json_encode(['products'=>$this->lo_products, 'quantity'=>(int)$this->lower['quantity'],'wages'=>$this->lowerWagesJsonEncode()]);
+            $order_item->item_summary           = json_encode(['products'=>$this->lo_products, 'quantity'=>(int)$this->lower['quantity'],'wages'=>$this->lowerWagesJsonEncode()],JSON_UNESCAPED_UNICODE);
             $order_item->measurement            = $this->lowerMeasurementJsonEncode('encode');
             $order_item->designs                = $this->lowerDesignsJsonEncode('encode');
             if ($this->lo_status && $this->lo_status) {
-                $order_item->status                 = $this->lo_status;
+                $order_item->itemGroup->status                 = $this->lo_status;
             }            
             if($order_item->save()){
                 if ($update) {
@@ -211,13 +221,14 @@ trait OrderTrait {
                 'cloth_throat'          => $this->cloth_throat,//?$this->cloth_throat:''
                 'cloth_collar'          => $cloth_collar,
                 'cloth_mora'            => $this->cloth_mora,//?$this->cloth_mora:''
+                'plate_length'            => $this->plate_length??null,//?$this->cloth_mora:''
                 'noke_shoho'            => $this->noke_shoho,//?$this->noke_shoho:''
                 'cloth_additional'      => $this->cloth_additional,//?$this->cloth_additional:''
                 'plate'                 => $this->plate != null && count(array_filter($this->plate))>0 ? json_encode($this->plate):null,
                 'pocket'                => $this->pocket != null && count(array_filter($this->pocket))>0 ? json_encode($this->pocket):null,
             ];
             if ($encoded==='encode') {
-                return json_encode($calculated);
+                return json_encode($calculated, JSON_UNESCAPED_UNICODE);
             }
             return $calculated;
         }else{
@@ -227,20 +238,17 @@ trait OrderTrait {
     }
     // upper design json conversion
     public function upperDesignsJsonEncode($encoded='encode'){
-        if ($this->up_design_fields!=null && count(array_filter($this->up_design_fields))>0) {
-            $result = [];
-            foreach(array_filter($this->up_design_fields) as $k=> $val){
-                $result[$k]=trim($val)!='' ? trim($val):null;
-            }
-            if ($encoded='encode') {
-                return json_encode($result);
-            }else {
-                return $result;
-            }
-        }else {
-            return null;
+        $upFieldFilter = array_filter($this->up_design_fields);
+        $result =[];
+        foreach (array_filter($this->up_designs_check) as $k => $v) {
+            $value =in_array($k,array_keys($upFieldFilter))===true && strlen(trim($upFieldFilter[$k]))>0?trim($upFieldFilter[$k]):null;
+            $result[$k]=$value;
         }
-        
+        if ($encoded='encode') {
+            return json_encode($result, JSON_UNESCAPED_UNICODE);
+        }else {
+            return $result;
+        }        
     }
    //upper wages json 
     public function upperWagesJsonEncode($encoded=null)
@@ -251,7 +259,7 @@ trait OrderTrait {
             $order_total            = $this->upper['total'];
             $calculated             = ['total'=>(int)$order_total, 'discount'=> (int)$order_discount,'advance'=> (int)$order_advance];
             if ($encoded==='encode') {
-                return json_encode($calculated);
+                return json_encode($calculated,JSON_UNESCAPED_UNICODE);
             }
             return $calculated;
         }else{
@@ -281,7 +289,7 @@ trait OrderTrait {
                 'additional'            => $this->lower_additional
             ];
             if ($encoded='encode') {
-                return json_encode($result);
+                return json_encode($result, JSON_UNESCAPED_UNICODE);
             }else {
                 return $result;
             }
@@ -298,7 +306,7 @@ trait OrderTrait {
                 $result[$k]=trim($val)!='' ? trim($val):null;
             }
             if ($encoded='encode') {
-                return json_encode($result);
+                return json_encode($result, JSON_UNESCAPED_UNICODE);
             }else {
                 return $result;
             }
@@ -315,7 +323,7 @@ trait OrderTrait {
             $order_total            = $this->lower['total'];
             $calculated             = ['total'=>(int)$order_total, 'discount'=> (int)$order_discount,'advance'=> (int)$order_advance];
             if ($encoded==='encode') {
-                return json_encode($calculated);
+                return json_encode($calculated, JSON_UNESCAPED_UNICODE);
             }
             return $calculated;
         }else {
@@ -343,7 +351,7 @@ trait OrderTrait {
                         'line2'             =>$this->line2,
                         'zipcode'           =>$this->zipcode,
                     ];
-            return json_encode($encdeDelivery);
+            return json_encode($encdeDelivery, JSON_UNESCAPED_UNICODE);
         }else{
             return null;
         }
@@ -453,16 +461,47 @@ trait OrderTrait {
     }
     public function changeOrderItemStatusWithOrderManagement($id, $status, $saveItem=null)
     {
+        // dd($id, $status, $saveItem);
         $order                          = OrderItem::find($id);
         $order->status                  = $status;
         if ($saveItem) {
-            $order->save();
+           $order->save();
         }        
-        if ( $status && ($status!=='cancled' || $status!=='completed')) {
+        if ( $status && ($status!=='cancled' && $status!=='completed')) {
             $order->itemGroup->status   = $status;
             $order->itemGroup->save();
         }
 
     }
-    
+
+    public function othersHolidaysFun()
+    {
+         $disbaledDate = Setting::where('status',1)
+                    ->where('name','off-day')
+                    ->get('date');
+        if ($disbaledDate->count()>0) {
+            $str="";
+            foreach ($disbaledDate as $k=> $v) {
+                $str.=$v->date.',';
+            }
+            return $str;
+        }
+        return false;
+                    
+    }
+    // public function checkOffDay($day=null)
+        // {
+        //     if (!$day&& !$day) return false;
+        //     $offday = Setting::where('status',1)->where('name','off-day')->first();
+            
+        //     if ($offday->date) {
+        //       $dayOfWeek = Carbon::parse($offday->date)->dayOfWeek;
+        //       $nextDate = Carbon::now('Asia/Dhaka')->addDays($day)->dayOfWeek;
+        //       if ($dayOfWeek===$nextDate) {
+        //           return true;
+        //       }
+        //       return false;
+        //     }
+        //     return false;
+        // }
 }

@@ -19,10 +19,11 @@
         <a class="nav-link" data-widget="navbar-search" href="#" role="button">
           <i class="fas fa-search"></i>
         </a>
-        <div class="navbar-search-block">
+        <div class="navbar-search-block" wire:ignore.self>
           <form class="form-inline">
             <div class="input-group input-group-sm">
-              <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
+              <input class="form-control form-control-navbar position-relative" wire-change="searching" wire:model.debounce.500ms="searchInput" type="search" placeholder="Search..." aria-label="Search">
+                <span wire:loading.delay class="fa-solid fa-rotate spinner mt-2 fa-spin" style="position: absolute;z-index:9999;right:65px;"></span>
               <div class="input-group-append">
                 <button class="btn btn-navbar" type="submit">
                   <i class="fas fa-search"></i>
@@ -33,9 +34,35 @@
               </div>
             </div>
           </form>
+          <style>.search-result-box{top:46px; width: 97%; }</style>
+          <div class="container-fluid p-0 position-absolute search-result-box @if($searchInput)d-block @else d-none @endif">
+            <div class="card card-body m-0">
+              @if (count($searchResult)>0)
+              <div class="row text-bold">
+                <div class="col-2">ID</div>
+                <div class="col-4">Name</div>
+                <div class="col-4">Order</div>
+                <div class="col-2">Action</div>
+              </div>
+                  
+              @endif
+              @forelse ($searchResult as $customer)
+              <div class="row">
+                <div class="col-2">{{$customer->order_number}}</div>
+                <div class="col-4">{{$customer->name}}</div>
+                <div class="col-4">{{$customer->order_number}}</div>
+                <div class="col-2">Action</div>
+              </div>
+              @empty
+              <div class="row">
+                <div class="col-md-12 text-muted text-center">কোন কাস্টমার পাওয়া যায়নি</div>
+              </div>
+              @endforelse
+              
+            </div>
+          </div>
         </div>
-      </li>
-
+      </li>      
       <!-- Messages Dropdown Menu -->
       <li class="nav-item dropdown">
         <a class="nav-link" data-toggle="dropdown" href="#">
@@ -136,6 +163,7 @@
       </li>
     </ul>
     <form id="form_logout_control" action="{{route('logout')}}" method="POST">
-          @csrf
-      </form>
+        @csrf
+    </form>
+    
   </nav>

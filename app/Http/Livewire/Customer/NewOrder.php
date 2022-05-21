@@ -2,6 +2,7 @@
 namespace App\Http\Livewire\Customer;
 use Carbon\Carbon;
 use App\Models\Product;
+use App\Models\Setting;
 use Livewire\Component;
 use App\Models\Customer;
 use App\Models\DesignItem;
@@ -20,7 +21,7 @@ class NewOrder extends Component
     //Customer
     public $customer_id, $name, $email, $mobile, $photo;
     //Order
-    public $order_number, $delivery_date, $order_date, $up_status, $lo_status, $delivery_status='processing', $force_id, $order_delivery, $force_previous_date, $weekendholiday, $order_management_id;
+    public $order_number, $delivery_date, $order_date, $up_status, $lo_status, $delivery_status='processing', $force_id, $order_delivery, $force_previous_date, $weekendholiday, $othersHoliday, $order_management_id;
     /**
      * Upper part
      * Panzabi
@@ -44,18 +45,28 @@ class NewOrder extends Component
     /**
      * Design fields
      */
-    public $up_designs_check=[], $up_design_fields=[], $lo_designs_check=[], $lo_design_fields=[], $upper_design_show, $lower_design_show, $show_design_group_heading, $wages_screenshot_url;
+    public $up_designs_check=[], $match='any', $up_design_fields=[], $lo_designs_check=[], $lo_design_fields=[], $upper_design_show, $lower_design_show, $show_design_group_heading, $wages_screenshot_url;
     
-
-    public function mount($order_number, $order_management_id=null)
+        
+    public function mount($order_number=null, $order_management_id=null)
     {
-        $this->order_number = $order_number;
-        $customer           = Customer::where('order_number',$order_number)->first();
-        if(!$customer){
-            // return Customer::findOrFail($order_number);
-            // return redirect()->route('welcome');
-            // return view('welcome');
+        $offday = Setting::where('status',1)->where('name','off-day')->first();
+        if ($offday && $offday->date) {
+            if ($offday->match==='exact') {
+                $this->match = $offday->match;
+            }
+            $this->weekendholiday = $offday->date;
         }
+        $customer;
+        if ($order_number) {
+            $this->order_number = $order_number;
+            $customer           = Customer::where('order_number',$order_number)->firstOrFail();
+        }else {
+            $order           = OrderManagement::findOrFail($order_management_id);
+            $customer        = $order->customer;
+            $this->order_number = $customer->order_number;
+        }
+        
         $this->customer_id  = $customer->id;
         $this->name         = $customer->name;
         $this->email        = $customer->email;
@@ -64,16 +75,20 @@ class NewOrder extends Component
         if ($order_management_id) {
             $this->order_management_id = $order_management_id;
         }else {
-            $this->delivery_date = date( "Y-m-d", strtotime( date( "Y-m-d")." +10 days" ));
-            $this->weekendholiday = 4;
+            $defaultDelivery =  Setting::where('status',1)->where('name','default-delivery-date')->first();
+            $this->delivery_date = Carbon::now('Asia/Dhaka')->addDays($defaultDelivery->purpose??0)->format('Y-m-d');
             $this->order_date = Carbon::now()->format('Y-m-d');
+            // if (gettype($this->othersHolidaysFun())==='array') {
+                $this->othersHoliday = $this->othersHolidaysFun();
+            // }
+            
         }
-        
+        // dd($this->weekendholiday);
     }
     public function updated($fields)
     {
-        if ($this->order_management_id !=null ) {
-            $this->orderAndDeliveryDate();
+        if (!$this->order_management_id) {
+            $this->validateOnly($fields,$this->orderAndDeliveryDate());
         }
         // if (!$this->force_previous_date) {
         //     $this->validateOnly($fields,$this->forceIdWithDateErrorRule());
@@ -121,7 +136,9 @@ class NewOrder extends Component
 
     public function addOrder()
     {
-        // $this->dispatchBrowserEvent('reset_form', ['data'=>'']);
+        if (!$this->order_management_id) {
+            $this->validate($this->orderAndDeliveryDate());
+        }
         $this->validate($this->commonOrderErrorRule());
         if ($this->up_products !== null && $this->lo_products ==null) {
             $this->validate([
@@ -193,14 +210,14 @@ class NewOrder extends Component
     }
     public function render()
     {
-        $this->wagesesCalculation();
-        
         $upperProductsPart  = Product::where('status',1)->where('type',1)->get();
         $lowerProductsPart  = Product::where('status',1)->where('type',2)->get();
         $allproducts        = Product::where('status',1)->get();
         $desgnGroups        = DesignGroup::get();
-        $designItems        = DesignItem::where('status',1)->get();
+        $UpDesignItems      = DesignItem::where('status',1)->where('apply_on','like', "%{$this->up_products}%")->get();
+        $LoDesignItems      = DesignItem::where('status',1)->where('apply_on','like', "%{$this->lo_products}%")->get();
         $statuses           = OrderManagement::orderManagementStatus();
-        return view('livewire.customer.new-order', compact('allproducts','upperProductsPart','lowerProductsPart', 'desgnGroups', 'designItems', 'statuses'))->layout('layouts.starter');
+            $this->wagesesCalculation();
+        return view('livewire.customer.new-order', compact('allproducts','upperProductsPart','lowerProductsPart', 'desgnGroups','UpDesignItems', 'LoDesignItems', 'statuses'))->layout('layouts.starter');
     }
 }

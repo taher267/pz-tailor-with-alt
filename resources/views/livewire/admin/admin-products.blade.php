@@ -129,13 +129,13 @@
     <script>
         $(document).ready(function(){
             $('.add-update-from-show-hide').hide();
-            window.addEventListener('data_alert', event => {
-              document.querySelector(".product-manage-form").reset();
-                if (event.detail.data) {
-                    $('.add-update-from-show-hide').fadeIn();
-                }else{
-                  $('.add-update-from-show-hide').fadeOut();
-                }
+            window.addEventListener('products_data', event => {
+              // document.querySelector(".product-manage-form").reset();
+                // if (event.detail.data) {
+                //     $('.add-update-from-show-hide').fadeIn();
+                // }else{
+                //   $('.add-update-from-show-hide').fadeOut();
+                // }
                 if (event.detail.success_id) {
                   $(`.table-row-${event.detail.success_id}`).addClass('bg-success');
                   setTimeout(() => {
@@ -144,13 +144,13 @@
                 }
             });
         });
-        window.addEventListener('show_large', event => {
-            if (event.detail.data===true) {
-              document.querySelector('.shadow-lg').classList.add('maximized-card');
-            }else{
-              document.querySelector('.shadow-lg').classList.remove("maximized-card");
-            }
+        // window.addEventListener('form_expanding', event => {
+        //     if (event.detail.data===true) {
+        //       document.querySelector('.shadow-lg').classList.add('maximized-card');
+        //     }else{
+        //       document.querySelector('.shadow-lg').classList.remove("maximized-card");
+        //     }
             
-        });
+        // });
     </script>
 @endpush

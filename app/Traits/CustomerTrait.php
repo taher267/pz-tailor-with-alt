@@ -104,21 +104,6 @@ trait CustomerTrait{
         
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
    public function fixedMobile($mobile)
     {
         $newPhone;

@@ -1,4 +1,8 @@
 <div>
+@if($order_number_disabled)
+  <style>.position-relative.order_number::after{position: absolute; content:"অনেকগুলি অর্ডার উপস্থিত থাকার কারণে অর্ডারের সংখ্যা পরিবর্তন করা যাচ্ছে না";bottom:14px;font-size: 10px;color: #dc1a1a;right: 11px;}
+  </style>
+  @endif
     <div class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
@@ -23,50 +27,46 @@
           <div class="row">
             <div class="col-md-10 pl-3">
                   <div class="form-group row">
-                    <label for="inputName" class="col-sm-2 col-form-label">Order No</label>
+                    <label for="inputName" class="col-sm-2 col-form-label">অর্ডার নং-</label>
                     <div class="col-sm-10">
                       <div class="row">
-                        <div class="col-lg-7">
-                            <label for="order_number" style="letter-spacing:px">অর্ডার নং-</label>
+                        {{-- @if($order_number_disabled)<span class="fz-10 text-warning">অনেকগুলি অর্ডার উপস্থিত থাকার কারণে অর্ডারের সংখ্যা পরিবর্তন করা যাচ্ছে না</span>@endif --}}
+                        <div class="col-lg-12 order_number @if($order_number_disabled)position-relative @endif">
+                            {{-- <label for="order_number" style="letter-spacing:px"></label> --}}
                             <input type="number" class="form-control @error('order_number') is-invalid @enderror"
                                 @if(!$force_id) min="1"
                                 max="{{$maxOrderId}}" @else min="1" @endif wire:model="order_number"
-                                id="order_number" required>
-                            @error('order_number')<div class="invalid-feedback">{!!'অর্ডার নং'.$message!!}</div>
-                            @enderror
-                        </div>
-                        <div class="col-lg-5">
-                            <input type="checkbox" value="1" wire:model="force_id" id="force_wish">
-                            <label for="force_wish">পূর্ববর্তী অর্ডার নং যুক্ত করুন</label>
+                                id="order_number" required @disabled($order_number_disabled)>
+                            @error('order_number')<div class="invalid-feedback">{!!'অর্ডার নং'.$message!!}</div>@enderror
                         </div>
                     </div>
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label for="inputName" class="col-sm-2 col-form-label">Name</label>
+                    <label for="inputName" class="col-sm-2 col-form-label">নামঃ</label>
                     <div class="col-sm-10">
                       <input type="text" wire:model="name" class="form-control @error('name') is-invalid @enderror" id="inputName" placeholder="নাম" required>
                       @error('name')<div class="invalid-feedback">{!!'নাম'.$message!!}</div>@enderror
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label for="mobilePhone" class="col-sm-2 col-form-label">Mobile No</label>
+                    <label for="mobilePhone" class="col-sm-2 col-form-label">মোবাইল নম্বর</label>
                     <div class="col-sm-10">
                       <input type="text" wire:model.debounce.500ms="mobile" class="form-control @error('mobile')is-invalid @enderror" id="mobilePhone" placeholder="019xxxxxxx" required>
                       @error('mobile')<div class="invalid-feedback">{!!'মোবাইল নম্বর'.$message!!}</div>@enderror
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
+                    <label for="inputEmail" class="col-sm-2 col-form-label">ইমেইলঃ</label>
                     <div class="col-sm-10">
-                      <input type="email"  wire:model.debounce.500ms="email" class="form-control @error('email')is-invalid @enderror" id="inputEmail" placeholder="Email">
+                      <input type="email"  wire:model.debounce.500ms="email" class="form-control @error('email')is-invalid @enderror" id="inputEmail" placeholder="ইমেইল">
                       @error('email')<div class="invalid-feedback">{{$message}}</div>@enderror
                     </div>
                   </div>
                   <div class="form-group row">
-                    <label for="address" class="col-sm-2 col-form-label">Address</label>
+                    <label for="address" class="col-sm-2 col-form-label">ঠিকানাঃ</label>
                     <div class="col-sm-10">
-                      <textarea class="form-control @error('address')is-invalid @enderror" wire:model="address" id="address" placeholder="Address"></textarea>
+                      <textarea class="form-control @error('address')is-invalid @enderror" wire:model="address" id="address" placeholder="গ্রাহকের ঠিকানাঃ"></textarea>
                       @error('address')<div class="invalid-feedback">{{$message}}</div>@enderror
                     </div>
                   </div>

@@ -1,0 +1,59 @@
+@import url("https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400&display=swap");
+
+.panzabi-dot-com-tailots {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+
+.panzabi-dot-com-tailots table>tbody tr td {
+    width: 66px !important;
+    height: 28px !important;
+    font-size: 15px !important;
+    text-align: center !important;
+    border: 1px solid #ddd;
+    font-family: "Hind Siliguri", sans-serif !important;
+}
+
+.panzabi-dot-com-tailots .order-card-wrapper {
+    display: flex !important;
+    font-family: "Hind Siliguri", sans-serif !important;
+    max-width: 640px;
+    border: 1px solid;
+    margin: 10px auto 0 auto;
+    height: 302px;
+}
+
+.panzabi-dot-com-tailots .left-part {
+    /* border: 1px solid red; */
+    width: 80px !important;
+}
+
+.panzabi-dot-com-tailots .left-part .name-part {
+    font-size: 11px !important;
+    text-align: right !important;
+    margin-right: 5px !important;
+    font-family: "Hind Siliguri", sans-serif !important;
+}
+
+.panzabi-dot-com-tailots .left-part .name-part p {
+    line-height: 15px !important;
+    margin-bottom: 2px !important;
+    font-weight: bold !important;
+}
+
+.panzabi-dot-com-tailots .checked-part p input {
+    height: 19px !important;
+    font-family: "Hind Siliguri", sans-serif !important;
+}
+
+.panzabi-dot-com-tailots tr.empty-tr {
+    width: 100% !important;
+    height: 26px !important;
+    font-family: "Hind Siliguri", sans-serif !important;
+}
+
+.panzabi-dot-com-tailots .right-part {
+    margin-left: 10px !important;
+    font-family: "Hind Siliguri", sans-serif !important;
+}

@@ -46,13 +46,13 @@ class AdminProducts extends Component
         $this->option = $product->option;
 
         $this->formShow = $this->formShow ? false : true;
-        $this->dispatchBrowserEvent('show_large', ['data' => true]);
+        // $this->dispatchBrowserEvent('form_expanding', ['data' => true]);
         $this->title = 'হালনাগাদ';
     }
     public function deleteProduct($id)
     {
         $product = Product::destroy($id);
-        $this->dispatchBrowserEvent('data_alert', ['data' => false]);
+        // $this->dispatchBrowserEvent('products_data', ['data' => false]);
     }
     public function updateProduct()
     {
@@ -65,14 +65,12 @@ class AdminProducts extends Component
     {
         $this->fromReset();
         $this->formShow = $this->formShow ? false : true;
-        $this->dispatchBrowserEvent('data_alert', ['data' => $this->formShow]);
-        // $this->dispatchBrowserEvent('show_large', ['data' => false]);
+        $this->dispatchBrowserEvent('products_data', ['data' => $this->formShow]);
         $this->title = 'যুক্ত';
     }
 
     public function render()
     {
-        $products = Product::orderByDesc('id')->paginate(10);
-        return view('livewire.admin.admin-products', compact('products'))->layout('layouts.starter');
+        return view('livewire.admin.admin-products', ['products'=>Product::orderByDesc('id')->paginate(10)])->layout('layouts.starter');
     }
 }

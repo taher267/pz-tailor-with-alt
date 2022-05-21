@@ -35,17 +35,17 @@ trait fileUploadDeleteTrait{
         }
     }
     
-    public function deleteFileTrait($files, $delForm='customers', $disk='public')
+    public function deleteFileTrait($files, $path='customers', $disk='public')
     {    
         if (gettype($files)==='array') {
             $imageNames=[];
             foreach($files as $file){
-                // $madeFileName=$this->fileNameGenerateAndUpload($file,$filename,$delForm, $disk);
+                // $madeFileName=$this->fileNameGenerateAndUpload($file,$filename,$path, $disk);
                 // array_push($imageNames,$madeFileName);                
             }
             return $imageNames;
         }else{
-            Storage::disk($disk)->delete("$delForm/$files");
+            Storage::disk($disk)->delete("$path/$files");
             return true;
         }
     }

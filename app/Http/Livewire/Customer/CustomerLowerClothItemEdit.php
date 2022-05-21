@@ -20,14 +20,13 @@ class CustomerLowerClothItemEdit extends Component
     public $lo_products, $length, $around_ankle, $crotch, $lo_status, $waist, $thigh_loose, $rubber, $lower_additional, $lower, $order_sample_images, $prev_qty;
     // Design
     public $lower_design_show, $lo_designs_check=[],$lo_design_fields=[];
-    public function mount($order_number, $order_management_id, $item_id)
+    public function mount($item_id)
     {
-        // dd(gettype($this->lo_design_fields));
-        $item = OrderItem::findOrFail($item_id);
+        $item = OrderItem::where('id',$item_id)->where('type', 'lower')->firstOrFail();
         $this->item_group           = $item->itemGroup;
         $this->item_id              = $item_id;
-        $this->order_number         = $order_number;
-        $this->order_management_id  = $order_management_id;
+        $this->order_number         = $item->order_number;
+        $this->order_management_id  = $item->order_management_id;
         $this->lo_status            = $item->lo_status;
         // dd($item);
         $measurement                = json_decode($item->measurement);
@@ -60,19 +59,19 @@ class CustomerLowerClothItemEdit extends Component
     }
     public function updated($fields)
     {
-        $this->validateOnly($fields,[
-            'lo_products'          => 'not_in:0'
-        ]);
-        if ($this->order_management_id !=null ) {
-            // $this->orderAndDeliveryDate();
-        }
+        // $this->validateOnly($fields,[
+        //     'lo_products'          => 'not_in:0'
+        // ]);
+        // if ($this->order_management_id !=null ) {
+        //     // $this->orderAndDeliveryDate();
+        // }
         $this->validateOnly($fields,$this->loProductsPresentErrorRule());
     }
     public function lowerFillEmptyStyleField($style_id){
-        $filterArr = array_filter($this->lo_design_fields);
-        if (in_array($style_id, array_keys($filterArr)) == false) {            
-            $this->lo_design_fields[$style_id]=' ';
-        } 
+        // $filterArr = array_filter($this->lo_design_fields);
+        // if (in_array($style_id, array_keys($filterArr)) == false) {            
+        //     $this->lo_design_fields[$style_id]=' ';
+        // }
     }
     public function resetDesignFields($params=null)
     {
@@ -81,16 +80,19 @@ class CustomerLowerClothItemEdit extends Component
 
     public function updateOrderItem()
     {
+        
         // $this->updateOrderSummary();
         $this->validate([
             'lo_products'          => 'not_in:0'
         ]);
         $this->validate($this->loProductsPresentErrorRule());
         if (count(array_filter($this->lo_designs_check))==0) {
-            return  $this->dispatchBrowserEvent('design_alert', ['message' => "<i class='fa-solid fa-person-dress text-info fa-2x'></i> ডিজাইন যুক্ত করুণ <i class='fa fa-exclamation-triangle text-danger'></i>",'effect'=>'warning']);
+            // return  $this->dispatchBrowserEvent('design_alert', ['message' => "<i class='fa-solid fa-person-dress text-info fa-2x'></i> ডিজাইন যুক্ত করুণ <i class='fa fa-exclamation-triangle text-danger'></i>",'effect'=>'warning']);
         }
+        
         $result = $this->placeOrderItem($this->order_management_id, $this->item_id);
-        // $this->dispatchBrowserEvent('design_alert', ['message' => "সঠিকভাবে আপডেট হয়েছে",'effect'=>'success']);
+
+        $this->dispatchBrowserEvent('design_alert', ['message' => "সঠিকভাবে আপডেট হয়েছে",'effect'=>'success']);
         Session()->flash('success', "সঠিকভাবে আপডেট হয়েছে");
         return redirect()->route('customer.order.items',[$this->order_number, $this->order_management_id]);
     }

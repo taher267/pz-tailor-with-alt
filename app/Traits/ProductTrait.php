@@ -35,16 +35,16 @@ trait ProductTrait{
        }elseif($activity){
             $product = Product::find($activity);
        }
-       $product->name   = $this->name;
-       $product->slug   = $this->slug;
-       $product->type   = $this->type;
-       $product->status = $this->status;
-       $product->wages  = $this->wages && $this->wages?$this->wages:0;
-       $product->option = $this->option;
+       $product->name   = trim($this->name);
+       $product->slug   = trim($this->slug);
+       $product->type   = trim($this->type);
+       $product->status = trim($this->status);
+       $product->wages  = trim($this->wages) && trim($this->wages)?trim($this->wages):0;
+       $product->option = trim($this->option);
        if($product->save()){
-         $this->dispatchBrowserEvent('show_large', ['data' => false]);
+        //  $this->dispatchBrowserEvent('form_expanding', ['data' => false]);
          $this->fromReset();
-         $this->dispatchBrowserEvent('data_alert', ['data' => false,"success_id"=>$product->id]);
+         $this->dispatchBrowserEvent('products_data', ['data' => false,"success_id"=>$product->id]);
          $this->formShow= false;
          return $product->id;
        }

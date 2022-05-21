@@ -2,7 +2,7 @@
 (function (factory, window, document) {
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
-        define(['jquery'], function($) {
+        define(['jquery'], function ($) {
             return factory(window, document, $);
         });
     } else {
@@ -17,60 +17,11 @@
     //
     // 
     var defaults = {
-        printLeafClass:         "pip-print",
-        printParentClass:       "pip-print-parent",
-        printRootClass:         "pip-print-root",
-        notPrintedLeafClass:    "pip-do-not-print"
-        /*
-        process state machine:
+        printLeafClass: "pip-print",
+        printParentClass: "pip-print-parent",
+        printRootClass: "pip-print-root",
+        notPrintedLeafClass: "pip-do-not-print"
 
-        init -> 
-        start (snapshot) ->
-            start-preview -> 
-                render-for-preview ->
-            finish-preview ->
-            (async continue?) ->
-        / abort -> EOP    
-        \ start-print ->
-            print ->
-        finish-print ->
-        (async continue?) ->
-        EOP
-
-        and
-
-        EOP -> 
-            start-rollback ->
-                rollback-render ->
-            finish-rollback ->
-        finish ->
-        THE END
-
-        Notes:
-
-        #A#:
-        The 'rollback' phase 'recovers' the page as it was before the init/start-preview state, i.e.
-        it 'resets the page to its original state / looks'.
-
-        #B#:
-        The preview phase serves two purposes:
-
-        1: users can see what is going to be printed
-        2: developers can more easily tweak the CSS and JS code for printing by having a page 'state' available which shows the page ready for printing: this reduces the round-trip time when editing CSS compared to the 'edit CSS::reload-page::print-page' cycle
-
-        #C#:
-        The print phase (and all other phases) has a 'default implementation' which can be overridden: developers can choose to supplant that implementation for a custom one. Use case example: instead of actually printing, you can use custom code to save a snapshot of the page to anywhere, because maybe you want a table dump or copy of the graphics and copypasta that one into your own app.
-
-        #D#:
-        All events are fired through callbacks: that way the developer can choose to use another event/message/comm system, e.g. postal PubSub or other means.
-
-        #E#:
-        The user can signal us at the end of the preview phase whether she wants to actually have the print process happen (continue) or not (abort). If you don't like the preview, you don't waste any more time and assets on printing it.
-
-        #F#:
-        I have pondered whether this should be a 'printable' (attribute = ability) or 'print' (action) plugin and choose the latter after some deliberation: a 'printable' approach would mean that we augment each element (or set of elements) which should be 'printable' and that would require a prototype-based approach to keep storage costs lean, while enabling developers to have all 'printables' listen for certain events (such as a request to print themselves). The 'print' action approach however would mean that we only temporarily augment one or more elements, don't have to bother about how many instances of this plugin will be alive at any one time (always one, compared to 'printable's many) but it also means we have all code more or less related to the print action linking up with the element every time we invoke (init) the action.
-
-        */
     };
 
 
@@ -87,9 +38,9 @@
     var system_has_print_events = false;
 
     /* @const */ var SYSTEM_HAS_BEFOREAFTERPRINT = 1
-                   , SYSTEM_HAS_LEGACY_BEFOREAFTERPRINT = 2
-                   , SYSTEM_HAS_MEDIAQUERY_LISTENER = 3
-                   ;
+        , SYSTEM_HAS_LEGACY_BEFOREAFTERPRINT = 2
+        , SYSTEM_HAS_MEDIAQUERY_LISTENER = 3
+        ;
 
     function registerSystemHandlers() {
         system_handlers_initialized++;
@@ -188,7 +139,7 @@
             self.abort();
         }
     }
-    
+
     function onBeforePrintMediaHandler() {
         for (var i = 0, len = registered_print_sessions.length; i < len; i++) {
             var self = registered_print_sessions[i];
@@ -206,22 +157,22 @@
 
     var global_master_instance = null;
 
-    /* @const */ var  INACTIVE_AT_INIT = 0
-                    , START_SNAPSHOT = 1
-                    , START_PREVIEW = 2
-                    , RENDER_PREVIEW = 3
-                    , FINISH_PREVIEW = 4
-                    , WAITING_FOR_CONTINUE_AFTER_PREVIEW = 5
-                    , START_PRINT = 6
-                    , RENDER_PRINT = 7
-                    , WAITING_FOR_PRINT_TO_COMPLETE = 8
-                    , FINISH_PRINT = 9
-                    , WAITING_FOR_CONTINUE_AFTER_PRINT = 10
-                    , START_ROLLBACK = 11
-                    , RENDER_ROLLBACK = 12
-                    , FINISH_ROLLBACK = 13
-                    , FINISHED_PRINT_OPERATION = 14
-                    ;
+    /* @const */ var INACTIVE_AT_INIT = 0
+        , START_SNAPSHOT = 1
+        , START_PREVIEW = 2
+        , RENDER_PREVIEW = 3
+        , FINISH_PREVIEW = 4
+        , WAITING_FOR_CONTINUE_AFTER_PREVIEW = 5
+        , START_PRINT = 6
+        , RENDER_PRINT = 7
+        , WAITING_FOR_PRINT_TO_COMPLETE = 8
+        , FINISH_PRINT = 9
+        , WAITING_FOR_CONTINUE_AFTER_PRINT = 10
+        , START_ROLLBACK = 11
+        , RENDER_ROLLBACK = 12
+        , FINISH_ROLLBACK = 13
+        , FINISHED_PRINT_OPERATION = 14
+        ;
 
     var executors = [
         /* state: INACTIVE_AT_INIT */
@@ -238,7 +189,7 @@
             self._aborted = false;          // and reset the ABORT bit for the next round of printing 
 
             UNregisterPrintSession(self);
-            
+
             resetTheDOM.call(self);
         },
         /* START_SNAPSHOT */
@@ -265,53 +216,53 @@
                 // we now have a set of elements to print / preview:
                 // first we need to 'separate these out' by hiding the rest of the DOM tree.
                 //
-	    	// Keep in mind that we expect we've got multiple elements to print,
-		// in other words: `.elements().length > 1`
-		//
-		// The transformation process (v1.0)
-		// ---------------------------------
-		//
-		// mark each leaf (= node listed in `.elements()`) as 'printing', 
-		// mark all its parents as 'parent' and when an element in the 'leaves' list 
-		// (i.e. `.elements()`) turns out to be a parent of another leaf, 
-		// remove the other from the set of elements which' siblings should 
-		// be marked 'NOT-printing'.
-		//
-		// When all elements have been marked, then go through that 
-		// 'siblings-not-printing' list and mark each sibling which has not been 
-		// marked as 'printing' or 'parent' yet as 'NOT-printing'.
-		//
-		// The idea being that the selection set to be printed can overlap internally 
-		// for maximum flexibility and the above algorithm will prevent the wrong nodes 
-		// from being marked as NON-printing: the CSS stylesheet can now easily identify 
-		// which bits show and which don't.
-		//  
-		// Having the parents marked up as well is another simplification for the stylesheet: 
-		// anyone which doesn't have a 'parent' or 'printing' class attached 
-		// should NOT be printed. Hence it may be argued that the siblings-not-printing set 
-		// is superfluous.
-		//
-		//
-		// The transformation process (v1.0)
-		// ---------------------------------
-		//
-		// Like the above (now removed) code, we still 'flag' all siblings of leaves 
-		// as non-printing to arrive at a minimal set of nodes to 'display:none'.
-		//
-		// However it turned out to be much faster and simpler in terms of LOC (Lines Of Code)
-		// to do this through a series of jQuery/CSS selectors:
-		//
-		// 1. tag the leaves as 'printing'
-		// 2. tag the parents as 'printing'
-		// 3. tag the siblings of leaves as 'not-printing'
-		// 4. tag the siblings of parents as 'not-printing'
-		// 5. undo the 'not-printing' tag for any childs of leaves (this last step enables us
-		//    to work with input element sets which 'overlap', i.e. where a parent and a child 
-		//    are both listed in the `.elements()`.
-		//
-		// Generic approach
-		// ----------------
-		// 
+                // Keep in mind that we expect we've got multiple elements to print,
+                // in other words: `.elements().length > 1`
+                //
+                // The transformation process (v1.0)
+                // ---------------------------------
+                //
+                // mark each leaf (= node listed in `.elements()`) as 'printing', 
+                // mark all its parents as 'parent' and when an element in the 'leaves' list 
+                // (i.e. `.elements()`) turns out to be a parent of another leaf, 
+                // remove the other from the set of elements which' siblings should 
+                // be marked 'NOT-printing'.
+                //
+                // When all elements have been marked, then go through that 
+                // 'siblings-not-printing' list and mark each sibling which has not been 
+                // marked as 'printing' or 'parent' yet as 'NOT-printing'.
+                //
+                // The idea being that the selection set to be printed can overlap internally 
+                // for maximum flexibility and the above algorithm will prevent the wrong nodes 
+                // from being marked as NON-printing: the CSS stylesheet can now easily identify 
+                // which bits show and which don't.
+                //  
+                // Having the parents marked up as well is another simplification for the stylesheet: 
+                // anyone which doesn't have a 'parent' or 'printing' class attached 
+                // should NOT be printed. Hence it may be argued that the siblings-not-printing set 
+                // is superfluous.
+                //
+                //
+                // The transformation process (v1.0)
+                // ---------------------------------
+                //
+                // Like the above (now removed) code, we still 'flag' all siblings of leaves 
+                // as non-printing to arrive at a minimal set of nodes to 'display:none'.
+                //
+                // However it turned out to be much faster and simpler in terms of LOC (Lines Of Code)
+                // to do this through a series of jQuery/CSS selectors:
+                //
+                // 1. tag the leaves as 'printing'
+                // 2. tag the parents as 'printing'
+                // 3. tag the siblings of leaves as 'not-printing'
+                // 4. tag the siblings of parents as 'not-printing'
+                // 5. undo the 'not-printing' tag for any childs of leaves (this last step enables us
+                //    to work with input element sets which 'overlap', i.e. where a parent and a child 
+                //    are both listed in the `.elements()`.
+                //
+                // Generic approach
+                // ----------------
+                // 
                 // We do this by tagging each of the selected DOM elements with a 'print' class,
                 // while tagging each of their parents with a 'print-parent' class, 
                 // meanwhile tracking which elements are only 'print':
@@ -485,7 +436,7 @@
                     break;
             }
         }
-        
+
         if (!e.isDefaultPrevented() && exec_f) {
             exec_f.call(this, e);
         }
@@ -502,7 +453,7 @@
         // future instances of the plugin
         var glbl = global_master_instance || {};
         this.settings = $.extend({}, defaults, glbl.options, options);
-        
+
         this._handlers = $.extend(true, {
             initPrinting: [],
 
@@ -554,7 +505,7 @@
         //
         // Note: when invoked while the process is already commencing on its own, i.e. when called from an event handler during a *synchronous* action state,
         // the call is simply ignored (the return value of the event handler is observed instead)
-        continue: function() {
+        continue: function () {
             this._working++;
             if (this._working === 1) {
                 this._currentState++;
@@ -572,7 +523,7 @@
         // when you have multiple async processes running your event handler(s) and need
         // *each and every one of them* to invoke `.continue()` before the print process
         // may commence.
-        prime: function(n) {
+        prime: function (n) {
             n = n | 0;
             n = n || 1;
             this._working = 1 - n;
@@ -612,12 +563,12 @@
             return this._aborted;
         },
 
-        isWorking: function() {
+        isWorking: function () {
             return this._working > 0;
         },
 
         // getter/setter for the set of DOM elements which will be print/previewed:
-        elements: function($set) {
+        elements: function ($set) {
             if ($set == null) {
                 return this._elements;
             } else if (!this._set_locked) {
@@ -657,12 +608,12 @@
             assert(hit.length === 0, "all events have been registered as they were known to the print-in-page plugin");
             return this;
         },
-        
+
         // Unregister the given handler(s) for this event.
         //
         // Notes: when you do not specify any handler (or `null`), then all registered handlers for this event are unregistered.
         // When you do not specify an event, then the handler is unregistered for *all* events.
-        off: function(event, handlers) {
+        off: function (event, handlers) {
             var harr = this._handlers;
             if (!handlers) {
                 handlers = false;
@@ -711,7 +662,7 @@
             }
 
             UNregisterSystemHandlers();
-            
+
             return this;
         }
     };
@@ -724,7 +675,7 @@
         // before we start the new print process, we see if we are already in a commonly shared one or we are happening right smack in the middle of other 'print' actions:
         // when we are already in another print action, then we abort immediately and signal this to the caller by throwing an exception: we do not support nesting!
 
-        var shared_instance; 
+        var shared_instance;
         if (this.length === 0) {
             if (global_master_instance) {
                 shared_instance = global_master_instance;
@@ -738,16 +689,5 @@
     };
 
 }, window, document));
-
-
-
-
-
-/*
-'T͎͍̘͙̖̤̉̌̇̅ͯ͋͢͜͝H̖͙̗̗̺͚̱͕̒́͟E̫̺̯͖͎̗̒͑̅̈ ̈ͮ̽ͯ̆̋́͏͙͓͓͇̹<̩̟̳̫̪̇ͩ̑̆͗̽̇͆́ͅC̬͎ͪͩ̓̑͊ͮͪ̄̚̕Ě̯̰̤̗̜̗͓͛͝N̶̴̞͇̟̲̪̅̓ͯͅT͍̯̰͓̬͚̅͆̄E̠͇͇̬̬͕͖ͨ̔̓͞R͚̠̻̲̗̹̀>̇̏ͣ҉̳̖̟̫͕ ̧̛͈͙͇͂̓̚͡C͈̞̻̩̯̠̻ͥ̆͐̄ͦ́̀͟A̛̪̫͙̺̱̥̞̙ͦͧ̽͛̈́ͯ̅̍N̦̭͕̹̤͓͙̲̑͋̾͊ͣŅ̜̝͌͟O̡̝͍͚̲̝ͣ̔́͝Ť͈͢ ̪̘̳͔̂̒̋ͭ͆̽͠H̢͈̤͚̬̪̭͗ͧͬ̈́̈̀͌͒͡Ơ̮͍͇̝̰͍͚͖̿ͮ̀̍́L͐̆ͨ̏̎͡҉̧̱̯̤̹͓̗̻̭ͅḐ̲̰͙͑̂̒̐́̊'
-
-H̸̡̪̯ͨ͊̽̅̾̎Ȩ̬̩̾͛ͪ̈́̀́͘ ̶̧̨̱̹̭̯ͧ̾ͬC̷̙̲̝͖ͭ̏ͥͮ͟Oͮ͏̮̪̝͍M̲̖͊̒ͪͩͬ̚̚͜Ȇ̴̟̟͙̞ͩ͌͝S̨̥̫͎̭ͯ̿̔̀ͅ"
-*/
-
 
 

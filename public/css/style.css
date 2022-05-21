@@ -166,3 +166,28 @@ Flonting input css
 .pz-text {
     color: #6F1E51;
 }
+
+button.relative.inline-flex.items-center.px-4.py-2.-ml-px.text-sm.font-medium.text-gray-700.bg-white.border.border-gray-300.leading-5 {
+    background: rgb(206, 153, 206) !important;
+    color: #fff !important
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: #009dea !important;
+}
+
+li.nav-item.menu-is-opening>a.nav-link {
+    background: rgba(128, 0, 128, 0.945) !important;
+}
+
+li.nav-item.menu-is-opening>ul.nav.nav-treeview {
+    background: linear-gradient(#6F1E51, #6F1E5120);
+    /* background: rgba(128, 0, 128, 0.527) !important; */
+}
+
+body {
+    margin: 0;
+    height: 100vh;
+    cursor: url('../assets/pointer.png'), auto;
+    /* cursor: cell; */
+}

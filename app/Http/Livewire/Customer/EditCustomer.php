@@ -6,13 +6,15 @@ use Livewire\Component;
 use App\Models\Customer;
 use App\Traits\CustomerTrait;
 use Livewire\WithFileUploads;
+use App\Models\OrderManagement;
 use Illuminate\Validation\Rule;
+use App\Rules\ChangeOrderNumber;
 
 class EditCustomer extends Component
 {
     use WithFileUploads;
     use CustomerTrait;
-    public $name, $mobile, $email, $address, $photo, $newphoto, $order_number, $maxOrderId,$force_id,$customer_id;
+    public $name, $mobile, $email, $address, $photo, $newphoto, $order_number, $maxOrderId,$force_id,$customer_id, $prev_order_number, $order_number_disabled=false;
     //Order Delivery
     public $order_delivery, $delivery_system, $courier_name, $old_courier_name, $delivery_charge, $country, $city, $province, $line1, $line2, $zipcode;
 
@@ -21,11 +23,14 @@ class EditCustomer extends Component
         $customer               = Customer::where('id',$id)->firstOrFail();
         //   if (!$customer) abort(404);
         $this->order_number     = $customer->order_number;
+        $this->prev_order_number= $customer->order_number;
         $this->name             = $customer->name;
         $this->mobile           = $customer->mobile;
         $this->email            = $customer->email;
         $this->address          = $customer->address;
         $this->photo            = $customer->photo;
+        $group = OrderManagement::where('order_number',$customer->order_number)->get('id');
+        $this->order_number_disabled = $group && count($group)>0?true:false;
         
         if ($customer->courier_details) {
             $this->order_delivery = 1;
@@ -45,7 +50,7 @@ class EditCustomer extends Component
     public function updated($fields)
     {
         $this->validateOnly($fields,[
-            'order_number'  =>  ["required","numeric","min:1","max:".$this->maxOrderNoFixing($this->order_number),Rule::unique('customers')->ignore($this->customer_id)],
+            'order_number'  =>  ["required","numeric","min:1","max:".$this->maxOrderNoFixing($this->order_number),Rule::unique('customers')->ignore($this->customer_id), new ChangeOrderNumber($this->prev_order_number)],
             'name'          =>  'required',
             'mobile'        =>  ['required',"regex:/^01([0-9]){9}$/",Rule::unique('customers')->ignore($this->customer_id)],
             'email'         =>  ["email","nullable",Rule::unique('customers')->ignore($this->customer_id)],
@@ -76,6 +81,10 @@ class EditCustomer extends Component
             'newphoto'  =>  'image|mimes:jpg,jpeg,png|nullable'
         ]);
         $result = $this->UpdateNewCustomerTrait($this->customer_id);
+        if($result){
+            Session()->flash('customer_update', 'গ্রাহকের তথ্য হালনাগাদ করা হয়েছে!');
+            return redirect()->route('customers');
+        }
     }
     public function render()
     {

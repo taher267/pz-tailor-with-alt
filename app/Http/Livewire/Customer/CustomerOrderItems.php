@@ -13,7 +13,7 @@ class CustomerOrderItems extends Component
 {
     use WithPagination;
     use OrderTrait;
-    public $order_number, $order_management_id, $change_order_item_status=[];
+    public $order_number, $order_management_id, $change_order_item_status=[],$print_view_show = false;
 
     public function mount($order_number, $order_management_id )
     {

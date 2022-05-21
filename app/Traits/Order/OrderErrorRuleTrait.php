@@ -1,6 +1,9 @@
 <?php
 namespace App\Traits\Order;
 
+use App\Models\DesignItem;
+use App\Rules\UpperClothDesignItemValidation;
+
 trait OrderErrorRuleTrait {
     public function forceIdWithDateErrorRule()
     {
@@ -66,7 +69,15 @@ trait OrderErrorRuleTrait {
     public function upProductsPresentErrorRule()
     {
         return[
-            'up_products'          => 'required_without:lo_products|not_in:0',
+            'up_designs_check'      => ["required_with:up_products",new UpperClothDesignItemValidation(array_filter($this->up_designs_check)),
+        ],
+            // 'up_designs_check.*'      => [function($attr, $v, $cb){
+            //     if (count(array_filter($this->up_designs_check))===0) {
+
+            //     $this->dispatchBrowserEvent('design_alert', ['message' => "কমপক্ষে একটি নকশায় <i class='fa fa-exclamation-triangle text-danger'></i>টিক দিন",'effect'=>'warning']);
+            //     $cb("কমপক্ষে একটি নকশায় (<i class='fa fa-check'></i>) টিক দিন");
+            // }},'required',"min:1"],
+            'up_products'           => 'required_without:lo_products|not_in:0',
             'cloth_long'            => 'required|string',
             'hand_long'             => 'required|string',
             'cloth_shoulder'        => 'required|string',
@@ -75,15 +86,49 @@ trait OrderErrorRuleTrait {
             'upper.discount'        => 'nullable|numeric',
             'upper.advance'         => 'nullable|numeric',
             'upper.wages'           => 'required|numeric',
-            'upper.total'           => 'required|numeric'
+            'upper.total'           => 'required|numeric',
+            'up_design_fields.*'      => [function($attr, $v, $cb){
+                // $this->ErrorMaker($cb);
+                $field = $this->up_design_fields;
+                $k = explode('.', $attr)[1];
+                if(!in_array($k, array_filter($this->up_designs_check))){
+                    // $item = ;
+                    $this->addError("lo_designs_check.$k", DesignItem::find($k)->name." (<i class='fa fa-check'></i>) টিক দিন!");
+                    $cb($k);
+                }
+            }]
         ];
     }
 
+    // public function ErrorMaker($cb)
+    // {
+    //     // $designItem = DesignItem::find();
+    //     $field = $this->lo_design_fields;
+    //     $check = $this->lo_designs_check;
+    //     if (count(array_filter($field))>0) {
+    //         foreach (array_filter($field) as $k => $v) {
+    //             if (in_array($k,array_filter($this->lo_designs_check))==false) {
+    //                 $item = DesignItem::find($k)->name;
+    //                 $this->addError("lo_designs_check.$k", "$item (<i class='fa fa-check'></i>) টিক দিন!");
+    //                 $cb('  ');
+    //             }                   
+    //         }
+            
+    //     }
+
+    // }
     public function loProductsPresentErrorRule()
     {
+        
+        // $arr=implode(",",array_filter(array_keys($this->lo_design_fields)));
         return[
-            'lo_products'          => 'required_without:up_products',
-            //lower part
+            'lo_designs_check.*'      => [function($attr, $v, $cb){if (count(array_filter($this->lo_designs_check))===0) {
+                $this->dispatchBrowserEvent('design_alert', ['message' => "কমপক্ষে একটি নকশায় <i class='fa fa-exclamation-triangle text-danger'></i>টিক দিন",'effect'=>'warning']);
+                $cb("কমপক্ষে একটি নকশায় (<i class='fa fa-check'></i>) টিক দিন");
+            }}],
+
+            // 'lo_designs_check'      => ["required_array_keys:$arr"],
+            'lo_products'           => 'required_without:up_products|not_in:0',
             'length'                => 'required|string',
             'around_ankle'          => 'required|string',
             'thigh_loose'           => 'required|string',
@@ -94,7 +139,17 @@ trait OrderErrorRuleTrait {
             'lower.discount'        => 'nullable|numeric',
             'lower.advance'         => 'nullable|numeric',
             'lower.wages'           => 'required|numeric',
-            'lower.total'           => 'required|numeric|gt:0'
+            'lower.total'           => 'required|numeric|gt:0',
+            'lo_design_fields.*'      => [function($attr, $v, $cb){
+                // $this->ErrorMaker($cb);
+                $field = $this->lo_design_fields;
+                $k = explode('.', $attr)[1];
+                if(!in_array($k, array_filter($this->lo_designs_check))){
+                    // $item = ;
+                    $this->addError("lo_designs_check.$k", DesignItem::find($k)->name." (<i class='fa fa-check'></i>) টিক দিন!");
+                    $cb($k);
+                }
+            }]
         ];
     }
 }

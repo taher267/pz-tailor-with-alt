@@ -109,7 +109,7 @@ return [
     'regex' => " সঠিকভাবে দিন <i class='fa fa-times'></i>",
     // 'required' => " দিন <i class='fa fa-triangle-exclamation'></i>",
     'required' => 'The :attribute field is required.',
-    'required_array_keys' => 'The :attribute field must contain entries for: :values.',
+    'required_array_keys' => 'The :attribute field must contain entries for: '.":values.",
     'required_if' => 'The :attribute field is required when :other is :value.',
     'required_unless' => 'The :attribute field is required unless :other is in :values.',
     'required_with' => 'The :attribute field is required when :values is present.',
